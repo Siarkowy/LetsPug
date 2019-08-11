@@ -1,0 +1,23 @@
+## Interface: 20400
+## Title: LetsPug
+## Notes: Organize Pug raids with ease. Usage: /lp
+## Author: Siarkowy
+## Version: 0.1.0
+## SavedVariables: LetsPugDB
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\LibFuBarPlugin-3.0\lib.xml
+
+core.lua
+utils.lua
+testing.lua
+instances.lua
+time.lua
+encode.lua
+cleanup.lua

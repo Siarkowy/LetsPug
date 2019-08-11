@@ -1,0 +1,12 @@
+Let's Pug
+(c) 2019 by Siarkowy (Acesulfame of WoW 5-man)
+
+CHANGELOG
+
+0.1.0
+    - First development version based on Ace3 framework.
+    - Implemented encoding/decoding of save info to/from short form.
+    - Storing logged character's name for per-profile alt listing.
+    - Saving player instance saves in per-realm datastore.
+    - Performing a regular cleanup of outdated instance saves.
+    - Provided instace names for enUS locale.
