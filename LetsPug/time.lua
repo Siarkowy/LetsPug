@@ -10,12 +10,35 @@ local HOUR   = 60 * MINUTE
 local DAY    = 24 * HOUR
 local WEEK   =  7 * DAY
 
---- Returns hour difference between client and server.
-function LetsPug:GetServerHourOffset()
+--- Returns a guessed hour difference between client and server.
+-- Susceptible to off-by-one error because of possible client-server time drift.
+function LetsPug:GuessServerHourOffset()
     local client_hr = tonumber(date("%H")) % 24
     local server_hr = GetGameTime()
     local diff = client_hr - server_hr
     return diff
+end
+
+--- Returns hour difference between client and server.
+function LetsPug:GetServerHourOffset()
+    return self.db.realm.server.hour_offset
+end
+
+--- Sets hour difference between client and server.
+function LetsPug:SetServerHourOffset(offset)
+    self.db.realm.server.hour_offset = tonumber(offset) or 0
+end
+
+--- Returns hour at which instance saves reset server-side.
+-- Stored in server's timezone.
+function LetsPug:GetServerResetHour()
+    return tonumber(self.db.realm.server.reset_hour) or 0
+end
+
+--- Sets hour at which instance saves reset server-side.
+-- Stored in server's timezone.
+function LetsPug:SetServerResetHour(hour)
+    self.db.realm.server.reset_hour = tonumber(hour) or 0
 end
 
 --- Returns server's current timestamp.
