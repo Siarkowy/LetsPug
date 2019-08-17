@@ -71,10 +71,27 @@ function LetsPug:OnSlashCmd(input)
     LibStub("AceConfigCmd-3.0").HandleCommand(self, "lp", self.name, input)
 end
 
+--- Registers character as player's alt.
 function LetsPug:RegisterAlt(name)
-    if self.db.profile.alts[name] == nil then
-        self.db.profile.alts[name] = true
+    name = self.StrToPascalCase(name)
+    if name and self:GetAltVisibility(name) == nil then
+        self:SetAltVisibility(name, true)
     end
+end
+
+--- Clears alt status from given character.
+function LetsPug:ClearAlt(name)
+    self.db.profile.alts[name] = nil
+end
+
+--- Returns alt visiblity for GUIs.
+function LetsPug:GetAltVisibility(name)
+    return self.db.profile.alts[name]
+end
+
+--- Sets alt visiblity for GUIs.
+function LetsPug:SetAltVisibility(name, is_shown)
+    self.db.profile.alts[name] = is_shown
 end
 
 function LetsPug:RegisterPlayerClass(player, class)

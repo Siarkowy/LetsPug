@@ -4,6 +4,16 @@
 --------------------------------------------------------------------------------
 
 local LetsPug = LetsPug
+local wipe = LetsPug.wipe
+
+local alts = {}
+local function getAltValues(info)
+    wipe(alts)
+    for name, _ in pairs(LetsPug.db.profile.alts) do
+        alts[name] = name
+    end
+    return alts
+end
 
 LetsPug.slash = {
     type = "group",
@@ -52,6 +62,50 @@ LetsPug.slash = {
                         LetsPug:SetServerHourOffset(v)
                     end,
                     order = 11
+                },
+            }
+        },
+        alts = {
+            name = "Alt management",
+            type = "group",
+            order = 20,
+            args = {
+                add = {
+                    name = "Add",
+                    desc = "Marks character as your alt.",
+                    usage = "<alt name>",
+                    type = "input",
+                    get = function(info)
+                        return ""
+                    end,
+                    set = function(info, name)
+                        LetsPug:RegisterAlt(name)
+                    end,
+                    order = 1
+                },
+                toggle = {
+                    name = "Toggle visibility",
+                    desc = "Toggles alt's visibility on/off.",
+                    type = "multiselect",
+                    values = getAltValues,
+                    get = function(info, name)
+                        return LetsPug:GetAltVisibility(name)
+                    end,
+                    set = function(info, name, is_shown)
+                        LetsPug:SetAltVisibility(name, is_shown)
+                    end,
+                    order = 2
+                },
+                delete = {
+                    name = "Delete",
+                    desc = "Clears alt mark from character, leaving instance save info intact.",
+                    type = "select",
+                    values = getAltValues,
+                    get = function(info, name) end,
+                    set = function(info, name, ...)
+                        LetsPug:ClearAlt(name)
+                    end,
+                    order = 3
                 },
             }
         },

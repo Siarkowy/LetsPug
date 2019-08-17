@@ -15,3 +15,11 @@ LetsPug.wipe = wipe
 function LetsPug:Printf(fmt, ...)
     self:Print(string.format(fmt, ...))
 end
+
+--- Returns input string in Pascal case (upper case first, lower case rest).
+-- Appropriate for character names.
+function LetsPug.StrToPascalCase(str)
+    if not str or str == "" then return nil end
+    str = str:sub(1, 1):upper() .. str:sub(2):lower()
+    return str
+end
