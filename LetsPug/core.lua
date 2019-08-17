@@ -44,7 +44,7 @@ function LetsPug:OnInitialize()
     self.player = UnitName("player")
     self.saves = {}
 
-    self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults)
+    self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, "Default")
     self.debug = self.db.profile.debug
 
     self:RegisterAlt(self.player)
