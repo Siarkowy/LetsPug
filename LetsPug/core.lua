@@ -144,3 +144,13 @@ function LetsPug:RegisterPlayerSaveInfo(player, save_info)
         instances[instance_key][player] = readable
     end
 end
+
+function LetsPug:GetPlayerSaveInfo(player)
+    return self.db.realm.saves[player]
+end
+
+function LetsPug:GetPlayerInstanceResetReadable(player, instance_key)
+    local instance_info = assert(self.db.realm.instances[instance_key], "Wrong instance key")
+    local reset_readable = instance_info[player]
+    return reset_readable
+end
