@@ -57,6 +57,18 @@ function LetsPug:OnInitialize()
 
     self:RegisterAlt(self.player)
     self:RegisterPlayerClass(self.player, select(2, UnitClass("player")))
+
+    self.slash.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+
+    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(self.name, self.slash)
+    self:RegisterChatCommand("lp", "OnSlashCmd")
+
+    self.options = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.name, "LetsPug")
+    self.options.default = function() self.db:ResetProfile() end
+end
+
+function LetsPug:OnSlashCmd(input)
+    LibStub("AceConfigCmd-3.0").HandleCommand(self, "lp", self.name, input)
 end
 
 function LetsPug:RegisterAlt(name)

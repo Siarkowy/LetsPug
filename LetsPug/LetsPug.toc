@@ -3,7 +3,7 @@
 ## Notes: Organize Pug raids with ease. Usage: /lp
 ## Author: Siarkowy
 ## X-License: 2-Clause BSD
-## Version: 0.1.0
+## Version: 0.2.0
 ## OptionalDeps: Ace3
 ## SavedVariables: LetsPugDB
 
@@ -26,3 +26,4 @@ instances.lua
 time.lua
 encode.lua
 cleanup.lua
+slash.lua
