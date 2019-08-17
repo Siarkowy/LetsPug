@@ -13,7 +13,7 @@ local WEEK   =  7 * DAY
 --- Returns a guessed hour difference between client and server.
 -- Susceptible to off-by-one error because of possible client-server time drift.
 function LetsPug:GuessServerHourOffset()
-    local client_hr = tonumber(date("%H")) % 24
+    local client_hr = tonumber(date("%H"))
     local server_hr = GetGameTime()
     local diff = client_hr - server_hr
     return diff
