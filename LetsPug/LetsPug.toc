@@ -2,7 +2,9 @@
 ## Title: LetsPug
 ## Notes: Organize Pug raids with ease. Usage: /lp
 ## Author: Siarkowy
+## X-License: 2-Clause BSD
 ## Version: 0.1.0
+## OptionalDeps: Ace3
 ## SavedVariables: LetsPugDB
 
 Libs\LibStub\LibStub.lua
@@ -11,7 +13,10 @@ Libs\AceAddon-3.0\AceAddon-3.0.xml
 Libs\AceEvent-3.0\AceEvent-3.0.xml
 Libs\AceTimer-3.0\AceTimer-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
 Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\LibFuBarPlugin-3.0\lib.xml
 
 core.lua
