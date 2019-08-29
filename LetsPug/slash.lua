@@ -7,7 +7,7 @@ local LetsPug = LetsPug
 local wipe = LetsPug.wipe
 
 local alts = {}
-local function getAltValues(info)
+function LetsPug:GetAltValuesSlash(info)
     wipe(alts)
     for name, _ in pairs(LetsPug.db.profile.alts) do
         alts[name] = name
@@ -16,7 +16,9 @@ local function getAltValues(info)
 end
 
 LetsPug.slash = {
+    handler = LetsPug,
     type = "group",
+    childGroups = "tab",
     args = {
         gui = {
             name = "GUI",
@@ -29,7 +31,7 @@ LetsPug.slash = {
             order = 0
         },
         server = {
-            name = "Server settings",
+            name = "Server",
             type = "group",
             order = 10,
             args = {
@@ -46,6 +48,7 @@ LetsPug.slash = {
                     set = function(info, v)
                         LetsPug:SetServerResetHour(v)
                     end,
+                    width = "full",
                     order = 10
                 },
                 tzoffset = {
@@ -61,12 +64,13 @@ LetsPug.slash = {
                     set = function(info, v)
                         LetsPug:SetServerHourOffset(v)
                     end,
+                    width = "full",
                     order = 11
                 },
             }
         },
         alts = {
-            name = "Alt management",
+            name = "Alts",
             type = "group",
             order = 20,
             args = {
@@ -81,30 +85,33 @@ LetsPug.slash = {
                     set = function(info, name)
                         LetsPug:RegisterAlt(name)
                     end,
+                    width = "full",
                     order = 1
                 },
                 toggle = {
                     name = "Toggle visibility",
                     desc = "Toggles alt's visibility on/off.",
                     type = "multiselect",
-                    values = getAltValues,
+                    values = "GetAltValuesSlash",
                     get = function(info, name)
                         return LetsPug:GetAltVisibility(name)
                     end,
                     set = function(info, name, is_shown)
                         LetsPug:SetAltVisibility(name, is_shown)
                     end,
+                    width = "full",
                     order = 2
                 },
                 delete = {
                     name = "Delete",
                     desc = "Clears alt mark from character, leaving instance save info intact.",
                     type = "select",
-                    values = getAltValues,
+                    values = "GetAltValuesSlash",
                     get = function(info, name) end,
                     set = function(info, name, ...)
                         LetsPug:ClearAlt(name)
                     end,
+                    width = "full",
                     order = 3
                 },
             }
