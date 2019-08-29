@@ -78,12 +78,14 @@ do
 end
 
 function LetsPug:EncodeSaveInfo(saves, since)
+    local hr_frac = since and 0 or self:GetServerResetHour() / 24
+
     saves = saves or self.saves or {}
-    since = since or self:GetReadableDateFromTimestamp(self:GetServerNow())
+    since = since or self:GetReadableDateHourFromTimestamp(self:GetServerNow())
 
     local function save(key)
         local expire_date = saves[key]
-        return expire_date and expire_date >= since and key or ""
+        return expire_date and expire_date + hr_frac >= since and key or ""
     end
 
     -- reset dates are assumed to be equal within tier
@@ -92,9 +94,9 @@ function LetsPug:EncodeSaveInfo(saves, since)
     local t6d = saves.h or saves.b or saves.p
 
     -- filter saves since given date
-    t4d = t4d and t4d > since and t4d
-    t5d = t5d and t5d > since and t5d
-    t6d = t6d and t6d > since and t6d
+    t4d = t4d and t4d + hr_frac > since and t4d
+    t5d = t5d and t5d + hr_frac > since and t5d
+    t6d = t6d and t6d + hr_frac > since and t6d
 
     -- construct per tier infos
     local t4 = t4d and format("%s%s%s%s", save"k", save"g", save"m", t4d or "") or ""

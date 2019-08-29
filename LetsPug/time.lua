@@ -54,6 +54,12 @@ function LetsPug:GetReadableDateFromTimestamp(stamp)
     return tonumber(date("%Y%m%d", stamp))
 end
 
+--- Returns a readable date/hour in YYYYMMDD.P format for specified timestamp.
+-- The P stands for fractional part of whole day, with minute resolution.
+function LetsPug:GetReadableDateHourFromTimestamp(stamp)
+    return tonumber(date("%Y%m%d", stamp)) + (date("%H", stamp) * 60 + date("%M", stamp)) / 1440
+end
+
 do
     local temp_date = {}
 
