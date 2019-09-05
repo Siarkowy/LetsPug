@@ -129,12 +129,16 @@ function LetsPug:ScheduleInstanceCleanup()
 end
 
 function LetsPug:GUILD_ROSTER_UPDATE()
+    if not self.got_info then return end
+
     if self.debug then
         self:Print("GUILD_ROSTER_UPDATE")
     end
 end
 
 function LetsPug:FRIENDLIST_UPDATE()
+    if not self.got_info then return end
+
     if self.debug then
         self:Print("FRIENDLIST_UPDATE")
     end
@@ -145,6 +149,7 @@ function LetsPug:UPDATE_INSTANCE_INFO()
         self:Print("UPDATE_INSTANCE_INFO")
     end
 
+    self.got_info = true
     self:RefreshSavedInstances()
     self:RegisterPlayerSaveInfo(self.player, self:EncodeSaveInfo(self.saves))
 end
