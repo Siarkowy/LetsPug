@@ -25,5 +25,6 @@ testing.lua
 instances.lua
 time.lua
 encode.lua
+guild.lua
 cleanup.lua
 slash.lua

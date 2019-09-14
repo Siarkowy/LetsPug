@@ -134,6 +134,8 @@ function LetsPug:GUILD_ROSTER_UPDATE()
     if self.debug then
         self:Print("GUILD_ROSTER_UPDATE")
     end
+
+    self:CheckGuildRosterPublicNote()
 end
 
 function LetsPug:FRIENDLIST_UPDATE()
