@@ -29,6 +29,7 @@ end
 
 --- Sets public note for given player.
 function LetsPug:SetGuildRosterPublicNoteByName(name, note)
+    if not self.HasPassed(8, "SetGuildRosterPublicNoteByName") then return end
     GuildRosterSetPublicNote(self:GetGuildRosterIndexByName(name), note)
 end
 

@@ -23,3 +23,25 @@ function LetsPug.StrToPascalCase(str)
     str = str:sub(1, 1):upper() .. str:sub(2):lower()
     return str
 end
+
+do
+    local _timers = {}
+    LetsPug.timers = _timers
+
+    --- Returns true if specified timer has passed the desired interval.
+    -- Timers are stored in an (optionally specified) array, and are
+    -- distinguished by an (optional) key, likely related to caller function.
+    function LetsPug.HasPassed(interval, key, timers)
+        assert(interval)
+        assert(type(interval) == "number")
+        key = key or "timer"
+        timers = timers or _timers
+
+        local now = GetTime()
+        local last_time = timers[key] or 0
+        if now - last_time >= interval then
+            timers[key] = now
+            return true
+        end
+    end
+end
