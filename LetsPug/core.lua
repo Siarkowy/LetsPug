@@ -135,6 +135,7 @@ function LetsPug:GUILD_ROSTER_UPDATE()
         self:Print("GUILD_ROSTER_UPDATE")
     end
 
+    self:SyncFromGuildRosterPublicNotes()
     self:CheckGuildRosterPublicNote()
 end
 

@@ -65,6 +65,21 @@ function LetsPug:CheckGuildRosterPublicNote()
     end
 end
 
+--- Synchronizes player save info from guild notes. Skips currently logged in player.
+-- Triggers LETSPUG_GUILD_SAVEINFO_UPDATE(player, info) event on any change detected.
+function LetsPug:SyncFromGuildRosterPublicNotes()
+    for i = 1, GetNumGuildMembers(true) do
+        local player, _, _, _, _, _, note, _, _, _, class = GetGuildRosterInfo(i)
+        local note_info = self:ExtractNoteSaveInfo(note)
+        local current_info = self:GetPlayerSaveInfo(player)
+        if note_info and note_info ~= current_info and player ~= self.player then
+            self:RegisterPlayerSaveInfo(player, note_info)
+            self:RegisterPlayerClass(player, class)
+            self:SendMessage("LETSPUG_GUILD_SAVEINFO_UPDATE", player, note_info)
+        end
+    end
+end
+
 --------------------------------------------------------------------------------
 -- Tests
 --------------------------------------------------------------------------------
