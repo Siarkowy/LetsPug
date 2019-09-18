@@ -154,7 +154,10 @@ function LetsPug:UPDATE_INSTANCE_INFO()
 
     self.got_info = true
     self:RefreshSavedInstances()
-    self:RegisterPlayerSaveInfo(self.player, self:EncodeSaveInfo(self.saves))
+
+    local save_info = self:EncodeSaveInfo(self.saves)
+    self:RegisterPlayerSaveInfo(self.player, save_info)
+    self:SendMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", self.player, save_info)
 end
 
 function LetsPug:RefreshSavedInstances()
