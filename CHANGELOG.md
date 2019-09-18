@@ -1,9 +1,7 @@
-Let's Pug
-(c) 2019 by Siarkowy (Acesulfame of WoW 5-man)
+# Let's Pug Changelog
 
-CHANGELOG
+## 0.2.0 (2019-08-17)
 
-0.2.0 (2019-08-17)
   - Switched to per-account profile by default, instead of per-character.
   - Introduced add-on configuration interface, available through chat command (/lp)
     and GUI (/lp gui). Currently time-related server settings can be adjusted.
@@ -14,7 +12,8 @@ CHANGELOG
   - Fixed a bug where NA players' timezone offset would be off by 24 hours.
   - Exposed API methods to query for player's save info and per-instance reset times.
 
-0.1.0 (2019-08-11)
+## 0.1.0 (2019-08-11)
+
   - First development version based on Ace3 framework.
   - Implemented encoding/decoding of save info to/from short form.
   - Storing logged character's name for per-profile alt listing.
