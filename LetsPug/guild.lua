@@ -56,7 +56,7 @@ function LetsPug:CheckGuildRosterPublicNote()
     local note_info = self:ExtractNoteSaveInfo(current_note)
     local current_info = self:EncodeSaveInfo()
 
-    if note_info ~= current_info then
+    if note_info ~= current_info and self:IsEditPublicNoteAvailable() then
         local new_note = self:CombineNoteSaveInfo(current_note, current_info)
         if self.debug then
             self:Print(("CheckGuildRosterPublicNote: old=%q new=%q"):format(current_note or "", new_note or ""))
@@ -78,6 +78,15 @@ function LetsPug:SyncFromGuildRosterPublicNotes()
             self:SendMessage("LETSPUG_GUILD_SAVEINFO_UPDATE", player, note_info)
         end
     end
+end
+
+--- Returns true if specified player is able to edit public notes.
+function LetsPug:IsEditPublicNoteAvailable(player)
+    local name, _, rank = self:GetGuildRosterInfoByName(player or self.player)
+    if not name then return end
+
+    GuildControlSetRank(rank + 1)
+    return not not select(10, GuildControlGetRankFlags())
 end
 
 --------------------------------------------------------------------------------
