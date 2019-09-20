@@ -12,6 +12,9 @@ local defaults = {
         alts = {
             -- [name] = is_shown
         },
+        sync = {
+            public_notes = true,
+        },
         debug = false,
     },
     realm = {
@@ -135,8 +138,10 @@ function LetsPug:GUILD_ROSTER_UPDATE()
         self:Print("GUILD_ROSTER_UPDATE")
     end
 
-    self:SyncFromGuildRosterPublicNotes()
-    self:CheckGuildRosterPublicNote()
+    if self:IsPublicNoteSyncEnabled() then
+        self:SyncFromGuildRosterPublicNotes()
+        self:CheckGuildRosterPublicNote()
+    end
 end
 
 function LetsPug:FRIENDLIST_UPDATE()

@@ -69,6 +69,26 @@ LetsPug.slash = {
                 },
             }
         },
+        sync = {
+            name = "Sync",
+            type = "group",
+            order = 15,
+            args = {
+                pubnotes = {
+                    name = "Sync to/from public notes while in guild",
+                    desc = "When enabled, player's public note will be automatically edited with save info if player is able to edit public notes. Additionally, save info will be synced from other players' notes.",
+                    type = "toggle",
+                    get = function(info)
+                        return LetsPug:IsPublicNoteSyncEnabled()
+                    end,
+                    set = function(info, v)
+                        LetsPug:SetPublicNoteSyncEnabled(v)
+                    end,
+                    width = "full",
+                    order = 10
+                },
+            }
+        },
         alts = {
             name = "Alts",
             type = "group",

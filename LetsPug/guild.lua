@@ -89,6 +89,17 @@ function LetsPug:IsEditPublicNoteAvailable(player)
     return not not select(10, GuildControlGetRankFlags())
 end
 
+--- Returns true if public note sync is currently enabled.
+function LetsPug:IsPublicNoteSyncEnabled()
+    return self.db.profile.sync.public_notes
+end
+
+--- Toggles public note sync on/off.
+function LetsPug:SetPublicNoteSyncEnabled(enabled)
+    enabled = not not enabled
+    self.db.profile.sync.public_notes = enabled
+end
+
 --------------------------------------------------------------------------------
 -- Tests
 --------------------------------------------------------------------------------
