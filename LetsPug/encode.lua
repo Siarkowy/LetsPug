@@ -61,6 +61,27 @@ local decode_abbrevs = {
     A = "",
 }
 
+local function less_than(a, b)
+    return a < b
+end
+
+--- Sorts table with provided comparator func or in ascending order by default.
+-- Can be used in place of table.sort as a guaranteed stable sort.
+-- Currently uses bubble sort, making it suitable for small tables.
+local function stable_sort(t, comp_func)
+    comp_func = comp_func or less_than
+
+    local n = #t
+    while n > 1 do
+        for i = 1, n - 1 do
+            if comp_func(t[i+1], t[i]) then
+                t[i], t[i+1] = t[i+1], t[i]
+            end
+        end
+        n = n - 1
+    end
+end
+
 do
     local result = {}
     function LetsPug:SortedByDate(...)
@@ -68,7 +89,7 @@ do
         for i = 1, select('#', ...) do
             table.insert(result, (select(i, ...)))
         end
-        table.sort(result, function(a, b)
+        stable_sort(result, function(a, b)
             local a = tonumber((a or ""):match("%d+")) or 30000000
             local b = tonumber((b or ""):match("%d+")) or 30000000
             return a < b
@@ -85,35 +106,23 @@ function LetsPug:EncodeSaveInfo(saves, since)
 
     local function save(key)
         local expire_date = saves[key]
-        return expire_date and expire_date + hr_frac >= since and key or ""
+        return expire_date and expire_date + hr_frac > since and format("%s%s", key, expire_date) or ""
     end
 
-    -- reset dates are assumed to be equal within tier
-    local t4d = saves.k or saves.g or saves.m
-    local t5d = saves.s or saves.t or saves.z
-    local t6d = saves.h or saves.b or saves.p
-
-    -- filter saves since given date
-    t4d = t4d and t4d + hr_frac > since and t4d
-    t5d = t5d and t5d + hr_frac > since and t5d
-    t6d = t6d and t6d + hr_frac > since and t6d
-
-    -- construct per tier infos
-    local t4 = t4d and format("%s%s%s%s", save"k", save"g", save"m", t4d or "") or ""
-    local t5 = t5d and format("%s%s%s%s", save"s", save"t", save"z", t5d or "") or ""
-    local t6 = t6d and format("%s%s%s%s", save"h", save"b", save"p", t6d or "") or ""
-
     -- construct initial info in sorted reset order (ensures proper date shortening)
-    local save_info = format("%s%s%s", self:SortedByDate(t4, t5, t6))
+    local save_info = format("%s%s%s%s%s%s%s%s%s", self:SortedByDate(
+        save"k", save"g", save"m", save"s", save"t", save"z", save"h", save"b", save"p"))
     save_info = save_info == "" and format("A%d", since) or save_info
 
     -- combine equal dates
-    save_info = gsub(save_info, "(%d%d%d%d%d%d%d%d)(%D+)(%1)", "%2%3")
-    save_info = gsub(save_info, "(%d%d%d%d%d%d%d%d)(%D+)(%1)", "%2%3")
+    for i = 1, 4 do
+        save_info = gsub(save_info, "(%d%d%d%d%d%d%d%d)(%D+)(%1)", "%2%3")
+    end
 
-    -- shorten dates to days (twice from the end)
-    save_info = gsub(save_info, "(.*)(%d%d%d%d%d%d%d%d)(%D+)(%d%d%d%d%d%d)(%d%d)", "%1%2%3%5")
-    save_info = gsub(save_info, "(.*)(%d%d%d%d%d%d%d%d)(%D+)(%d%d%d%d%d%d)(%d%d)", "%1%2%3%5")
+    -- shorten dates to days
+    for i = 1, 8 do
+        save_info = gsub(save_info, "(.*)(%d%d%d%d%d%d%d%d)(%D+)(%d%d%d%d%d%d)(%d%d)", "%1%2%3%5")
+    end
 
     -- drop years
     save_info = gsub(save_info, "(%d%d%d%d)(%d+)", "%2")
@@ -167,6 +176,14 @@ do
     local Y0201 = 20190201
 
     ----------------------------------------------------------------------------
+    -- Sorting
+    ----------------------------------------------------------------------------
+
+    assertEqual(string.join("", LetsPug:SortedByDate("a02", "b03", "c01")), "c01a02b03")
+    assertEqual(string.join("", LetsPug:SortedByDate("a01", "b01", "c01")), "a01b01c01")
+    assertEqual(string.join("", LetsPug:SortedByDate("c01", "b01", "a01")), "c01b01a01")
+
+    ----------------------------------------------------------------------------
     -- Encoding
     ----------------------------------------------------------------------------
 
@@ -217,6 +234,12 @@ do
     --------------------
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0101}, X1231), "a0101")
     assertEqual(LetsPug:EncodeSaveInfo({}, X1231), "A1231")
+
+    -- different reset for all instances
+    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101+0, g = Y0101+1, m = Y0101+2, s = Y0101+3, t = Y0101+4, z = Y0101+5, h = Y0101+6, b = Y0101+7, p = Y0101+8}, X1231), "k0101g02m03s04t05z06h07b08p09")
+
+    -- all but one reset equal
+    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0102}, X1231), "EP0101p02")
 
     ----------------------------------------------------------------------------
     -- Decoding
