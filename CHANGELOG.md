@@ -1,5 +1,16 @@
 # Let's Pug Changelog
 
+## 0.3.0 (2019-09-20)
+
+  - Increased resolution of save info handling from days to minutes. This change
+    allows for better estimation of remaining instance save time as long as server
+    and client timezone settings are configured.
+  - Save info is now stored to player's public note while in guild, and other
+    players' notes are synced from too. This option is enabled by default.
+  - Fixed a bug where player save info would be stored without server's refresh.
+  - Switched to tab display in settings view (/lp gui).
+  - Reformatted changelog in Markdown and moved to root directory.
+
 ## 0.2.0 (2019-08-17)
 
   - Switched to per-account profile by default, instead of per-character.
