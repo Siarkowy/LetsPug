@@ -17,7 +17,7 @@ local instance_keys = locale == "enUS" and {
 
     ["The Battle for Mount Hyjal"] = "h",
     ["Black Temple"] = "b",
-    ["Sunwell Plateau"] = "p",
+    ["The Sunwell"] = "p",
 }
 or {
 }
