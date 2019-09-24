@@ -65,7 +65,7 @@ do
 
     --- Returns a timestamp for specified YYYYMMDD readable date.
     function LetsPug:GetTimestampFromReadableDate(readable)
-        assert(readable, "GetTimestampFromReadableDate: readable is required")
+        if not readable then return nil end
 
         temp_date.year  = tonumber(string.sub(readable, 0, 4))
         temp_date.month = tonumber(string.sub(readable, 5, 6))
@@ -75,6 +75,14 @@ do
         temp_date.sec   = 0
         return time(temp_date)
     end
+end
+
+--- Returns server daily reset timestamp for specified YYYYMMDD readable date.
+function LetsPug:GetResetTimestampFromReadableDate(readable)
+    local reset_tstmp = self:GetTimestampFromReadableDate(readable)
+    if not reset_tstmp then return nil end
+
+    return reset_tstmp + (self:GetServerResetHour() - self:GetServerHourOffset()) * HOUR
 end
 
 --- Returns a short date in MMDD format for specified timestamp.
