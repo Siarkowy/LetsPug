@@ -3,7 +3,7 @@
 ## Notes: Organize Pug raids with ease. Usage: /lp
 ## Author: Siarkowy
 ## X-License: 2-Clause BSD
-## Version: 0.3.0
+## Version: 0.4.0
 ## OptionalDeps: Ace2, Ace3
 ## SavedVariables: LetsPugDB
 

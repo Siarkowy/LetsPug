@@ -1,5 +1,20 @@
 # Let's Pug Changelog
 
+## 0.4.0 (2019-09-25)
+
+  - Added RaidWatch module for easier alt tracking, with minimap button. When
+    howevered, it shows a table of instance vs. character names, and each pair
+    tells how much time is needed for the instance to reset, if any. Each logged
+    in character will be saved to the alt list, and show up in save table. It is
+    possible to add/hide/delete alts in configuration menus (/lp gui).
+  - Implemented instance focus for RaidWatch. Any instance can be focused by
+    respective character, so that a missing raid save is shown as green "o" mark
+    instead of the standard gray "x" mark. In effect, raids of higher importance
+    are visible at first sight. Instance focus configuration can be opened by
+    right clicking the RaidWatch minimap button or slash command (/lprw gui).
+  - Allowed for independent save dates in single tier (multiple T6 reset dates).
+  - Fixed Sunwell save recognition.
+
 ## 0.3.0 (2019-09-20)
 
   - Increased resolution of save info handling from days to minutes. This change
