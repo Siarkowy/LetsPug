@@ -29,7 +29,9 @@ utils.lua
 testing.lua
 instances.lua
 time.lua
+focus.lua
 encode.lua
 guild.lua
 cleanup.lua
 slash.lua
+slash_focus.lua

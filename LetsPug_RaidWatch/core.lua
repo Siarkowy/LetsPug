@@ -21,10 +21,6 @@ function RaidWatch.DecimalToHexColor(r, g, b) -- from http://wowprogramming.com/
     return format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
-function RaidWatch:IsPlayerFocusedInstance(player, instance_key)
-    return self.db.profile.focused_instances[player][instance_key]
-end
-
 function RaidWatch:GetPlayerExpandedSaveInfo(player)
     local now = LetsPug:GetServerNow()
     local reset_str = "%k%g%m - %s%t%z - %h%b%p"
@@ -33,7 +29,7 @@ function RaidWatch:GetPlayerExpandedSaveInfo(player)
     reset_str = reset_str:gsub("%%(%a)", function(instance_key)
         local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, instance_key)
         local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)
-        local is_focused = self:IsPlayerFocusedInstance(player, instance_key)
+        local is_focused = LetsPug:GetPlayerInstanceFocus(player, instance_key)
         local is_saved = reset_time and reset_time > now
 
         local color = is_saved and saved_color or is_focused and focused_color or available_color
@@ -74,11 +70,6 @@ local defaults = {
             focused = "33ff88",
             saved = "ff8833",
         },
-        focused_instances = {
-            ["*"] = {
-                -- [inst_key] = is_focused
-            },
-        },
     },
 }
 
@@ -90,17 +81,24 @@ function RaidWatch:OnInitialize()
         self:UpdateFuBarPlugin()
     end)
 
-    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(self.name, self.slash)
-    self:RegisterChatCommand("lprw", "OnSlashCmd")
+    -- migrate existing instance focus data
+    if self.db.profile.focused_instances then
+        for player, info in pairs(self.db.profile.focused_instances) do
+            for instance, is_focused in pairs(info) do
+                LetsPug:SetPlayerInstanceFocus(player, instance, is_focused)
+            end
+        end
+        self.db.profile.focused_instances = nil
+    end
 
-    self.options = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.name, "RaidWatch", LetsPug.name)
-    self.options.default = function() self.db:ResetProfile() end
+    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(self.name, LetsPug.slash.args.focus)
 
     self:OnFuInitialize()
 end
 
 function RaidWatch:OnEnable()
     self:RegisterMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", "UpdateFuBarPlugin")
+    self:RegisterMessage("LETSPUG_PLAYER_FOCUS_UPDATE", "UpdateFuBarPlugin")
 end
 
 function RaidWatch:OnSlashCmd(input)
@@ -116,14 +114,4 @@ function RaidWatch:RefreshAlts()
         end
     end
     table.sort(self.alts)
-end
-
-
-function RaidWatch:GetPlayerInstanceFocus(player, instance_key)
-    return self.db.profile.focused_instances[player][instance_key]
-end
-
-function RaidWatch:SetPlayerInstanceFocus(player, instance_key, v)
-    self.db.profile.focused_instances[player][instance_key] = v or nil
-    self:UpdateFuBarPlugin()
 end

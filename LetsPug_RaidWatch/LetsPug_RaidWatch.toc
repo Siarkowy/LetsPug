@@ -7,4 +7,3 @@
 
 core.lua
 fu.lua
-slash.lua

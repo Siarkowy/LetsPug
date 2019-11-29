@@ -12,6 +12,11 @@ local defaults = {
         alts = {
             -- [name] = is_shown
         },
+        focused_instances = {
+            ["*"] = {
+                -- [inst_key] = is_focused
+            },
+        },
         sync = {
             public_notes = true,
         },
