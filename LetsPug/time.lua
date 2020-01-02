@@ -49,6 +49,16 @@ function LetsPug:GetServerNow()
     return now - hour_offset * 60 * 60
 end
 
+--- Throws an error if argument under test in not a readable date in YYYYMMDD format.
+function LetsPug:AssertReadable(arg)
+    if type(arg) ~= "number" then
+        error(("Arg should be a number, got %q"):format(type(arg)), 2)
+    end
+    if arg <= 20000101 or arg >= 30000101 then
+        error(("Arg should be a readable date, got %q"):format(arg), 2)
+    end
+end
+
 --- Returns a readable date in YYYYMMDD format for specified timestamp.
 function LetsPug:GetReadableDateFromTimestamp(stamp)
     return tonumber(date("%Y%m%d", stamp))
@@ -99,24 +109,27 @@ end
 -- Tries both current and neighbour year and returns the closer one.
 -- Neighbour year is either (1) previous year for `now` before Jun 01
 -- or (2) next year otherwise.
-function LetsPug:GetTimestampFromShort(short, now)
-    local now = now or time()
-    local now_short = self:GetShortDateFromTimestamp(now)
+function LetsPug:GetTimestampFromShort(short, now_readable)
+    local now_readable = now_readable or self:GetReadableDateFromTimestamp(time())
+    self:AssertReadable(now_readable)
+
+    local now_short = self:GetShortDateFromReadable(now_readable)
+    local now_stamp = self:GetTimestampFromReadableDate(now_readable)
     local padded_short = format("%04d", short)
 
-    local current_year = date("%Y")
+    local current_year = tostring(now_readable):sub(1, 4)
     local neighbour_year = current_year + (now_short >= "0601" and 1 or -1)
 
     local a = self:GetTimestampFromReadableDate(current_year .. padded_short)
     local b = self:GetTimestampFromReadableDate(neighbour_year .. padded_short)
-    local da, db = abs(a - now), abs(b - now)
+    local da, db = abs(a - now_stamp), abs(b - now_stamp)
     return da < db and a or b
 end
 
 --- Returns a readable date in YYYYMMDD format for specified MMDD short date.
 -- Limitations of GetTimestampFromShort apply.
-function LetsPug:GetReadableDateFromShort(short, now)
-    return self:GetReadableDateFromTimestamp(self:GetTimestampFromShort(short, now))
+function LetsPug:GetReadableDateFromShort(short, now_readable)
+    return self:GetReadableDateFromTimestamp(self:GetTimestampFromShort(short, now_readable))
 end
 
 do
@@ -131,17 +144,14 @@ do
     assertEqual(LetsPug:GetTimestampFromReadableDate(19700101), 0)
     assertEqual(LetsPug:GetTimestampFromReadableDate("19700101"), 0)
 
-    local now = time{year = 2019, month = 07, day = 22, hour = 0, min = 0, sec = 0}
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", now), 20190722)
-    assertEqual(LetsPug:GetReadableDateFromShort("722", now), 20190722)
+    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190722), 20190722)
+    assertEqual(LetsPug:GetReadableDateFromShort("722",  20190722), 20190722)
 
-    local now = time{year = 2019, month = 07, day = 22, hour = 0, min = 0, sec = 0}
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", now - 1 * WEEK), 20190122)
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", now + 0 * WEEK), 20190122)
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", now + 1 * WEEK), 20200122)
+    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190715), 20190122)
+    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190722), 20190122)
+    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190729), 20200122)
 
-    local now = time{year = 2019, month = 01, day = 22, hour = 0, min = 0, sec = 0}
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", now - 1 * WEEK), 20180722)
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", now + 0 * WEEK), 20190722)
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", now + 1 * WEEK), 20190722)
+    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190115), 20180722)
+    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190122), 20190722)
+    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190129), 20190722)
 end
