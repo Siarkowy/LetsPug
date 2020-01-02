@@ -1,5 +1,15 @@
 # Let's Pug Changelog
 
+## 0.4.1 (2020-01-02)
+
+  - Fixed reported reset times for TBC 5-man server being 1 hour off by default.
+  - Fixed automatic client timezone recognition on first login. Should now properly
+    account for edge cases. However, server timezone is assumed to be GMT for now;
+    this functionality requires further work, possibly introducing a configurable
+    timezone setting for the server.
+  - Fixed a bug in which short date expansion didn't honor the provided `now` date.
+    This caused assertion errors in testing code; standard functionality unaffected.
+
 ## 0.4.0 (2019-09-25)
 
   - Added RaidWatch module for easier alt tracking, with minimap button. When
