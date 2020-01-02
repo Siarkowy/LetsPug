@@ -19,7 +19,7 @@ local defaults = {
     },
     realm = {
         server = {
-            reset_hour = 09,
+            reset_hour = 08,
             -- hour_offset = 00,
         },
         saves = {
