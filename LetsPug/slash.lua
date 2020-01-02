@@ -55,8 +55,8 @@ LetsPug.slash = {
                     name = "Client to server hours",
                     desc = "Difference between client and server timezones in hours. Positive value means client time is ahead of server time. Given a server in GMT (UTC+0) timezone, positive values apply to most of EU zone, while negative to NA.",
                     type = "range",
-                    min = -11,
-                    max = 12,
+                    min = -10,
+                    max = 14,
                     step = 1,
                     get = function(info)
                         return LetsPug:GetServerHourOffset()

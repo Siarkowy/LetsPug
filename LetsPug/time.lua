@@ -11,12 +11,18 @@ local DAY    = 24 * HOUR
 local WEEK   =  7 * DAY
 
 --- Returns a guessed hour difference between client and server.
--- Susceptible to off-by-one error because of possible client-server time drift.
-function LetsPug:GuessServerHourOffset()
-    local client_hr = tonumber(date("%H"))
-    local server_hr = GetGameTime()
-    local diff = client_hr - server_hr
-    return diff
+function LetsPug:GuessServerHourOffset(_client_hr, _server_hr)
+    local now_stamp = time()
+    local client_tz = (_client_hr or date("%H", now_stamp)) - (_server_hr or date("!%H", now_stamp))
+    local server_tz = 0 -- assume GMT
+
+    local diff_tz = client_tz - server_tz
+    if diff_tz < -9 then
+        diff_tz = diff_tz + 24
+    elseif diff_tz > 13 then
+        diff_tz = diff_tz - 24
+    end
+    return diff_tz
 end
 
 --- Returns hour difference between client and server.
@@ -154,4 +160,25 @@ do
     assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190115), 20180722)
     assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190122), 20190722)
     assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190129), 20190722)
+
+    -- UTC+0 / GMT
+    assertEqual(LetsPug:GuessServerHourOffset(00, 00), 0)
+    assertEqual(LetsPug:GuessServerHourOffset(23, 23), 0)
+
+    -- UTC+1 / CET
+    assertEqual(LetsPug:GuessServerHourOffset(01, 00), 1)
+    assertEqual(LetsPug:GuessServerHourOffset(23, 22), 1)
+    assertEqual(LetsPug:GuessServerHourOffset(00, 23), 1)
+
+    -- UTC+13 / NZDT
+    assertEqual(LetsPug:GuessServerHourOffset(13, 00), 13)
+    assertEqual(LetsPug:GuessServerHourOffset(23, 10), 13)
+    assertEqual(LetsPug:GuessServerHourOffset(00, 11), 13)
+    assertEqual(LetsPug:GuessServerHourOffset(12, 23), 13)
+
+    -- UTC-9 / AKST
+    assertEqual(LetsPug:GuessServerHourOffset(00, 09), -9)
+    assertEqual(LetsPug:GuessServerHourOffset(14, 23), -9)
+    assertEqual(LetsPug:GuessServerHourOffset(15, 00), -9)
+    assertEqual(LetsPug:GuessServerHourOffset(23, 08), -9)
 end
