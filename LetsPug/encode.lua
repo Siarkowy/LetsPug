@@ -215,14 +215,17 @@ do
     --------------------
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101}, X1231), "M0101")
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, m = Y0101}, X1231), "G0101")
+    assertEqual(LetsPug:EncodeSaveInfo({g = Y0101, m = Y0101}, X1231), "K0101")
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101}, X1231), "q0101")
 
     assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, t = Y0101}, X1231), "Z0101")
     assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, z = Y0101}, X1231), "T0101")
+    assertEqual(LetsPug:EncodeSaveInfo({t = Y0101, z = Y0101}, X1231), "S0101")
     assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, t = Y0101, z = Y0101}, X1231), "w0101")
 
     assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, b = Y0101}, X1231), "P0101")
     assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, p = Y0101}, X1231), "B0101")
+    assertEqual(LetsPug:EncodeSaveInfo({b = Y0101, p = Y0101}, X1231), "H0101")
     assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, b = Y0101, p = Y0101}, X1231), "e0101")
 
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101}, X1231), "E0101")
@@ -274,20 +277,24 @@ do
     --------------------
     assertEqualKV(LetsPug:DecodeSaveInfo("M0101", X1231), {k = Y0101, g = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("G0101", X1231), {k = Y0101, m = Y0101})
+    assertEqualKV(LetsPug:DecodeSaveInfo("K0101", X1231), {g = Y0101, m = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("q0101", X1231), {k = Y0101, g = Y0101, m = Y0101})
 
     assertEqualKV(LetsPug:DecodeSaveInfo("Z0101", X1231), {s = Y0101, t = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("T0101", X1231), {s = Y0101, z = Y0101})
+    assertEqualKV(LetsPug:DecodeSaveInfo("S0101", X1231), {t = Y0101, z = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("w0101", X1231), {s = Y0101, t = Y0101, z = Y0101})
 
     assertEqualKV(LetsPug:DecodeSaveInfo("P0101", X1231), {h = Y0101, b = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("B0101", X1231), {h = Y0101, p = Y0101})
+    assertEqualKV(LetsPug:DecodeSaveInfo("H0101", X1231), {b = Y0101, p = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("e0101", X1231), {h = Y0101, b = Y0101, p = Y0101})
 
     assertEqualKV(LetsPug:DecodeSaveInfo("E0101", X1231), {k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("W0101", X1231), {k = Y0101, g = Y0101, m = Y0101, h = Y0101, b = Y0101, p = Y0101})
     assertEqualKV(LetsPug:DecodeSaveInfo("Q0101", X1231), {s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0101})
 
+    assertEqualKV(LetsPug:DecodeSaveInfo("K0101s02h03", X1231), {g = Y0101, m = Y0101, s = Y0102, h = Y0103})
     assertEqualKV(LetsPug:DecodeSaveInfo("k0101S02h03", X1231), {k = Y0101, t = Y0102, z = Y0102, h = Y0103})
     assertEqualKV(LetsPug:DecodeSaveInfo("k0101s02H03", X1231), {k = Y0101, s = Y0102, b = Y0103, p = Y0103})
 
