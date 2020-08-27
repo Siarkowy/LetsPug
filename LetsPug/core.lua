@@ -90,6 +90,7 @@ end
 --- Clears alt status from given character.
 function LetsPug:ClearAlt(name)
     self.db.profile.alts[name] = nil
+    self:SendMessage("LETSPUG_ALTS_UPDATE")
 end
 
 --- Returns alt visiblity for GUIs.
@@ -100,6 +101,7 @@ end
 --- Sets alt visiblity for GUIs.
 function LetsPug:SetAltVisibility(name, is_shown)
     self.db.profile.alts[name] = is_shown
+    self:SendMessage("LETSPUG_ALTS_UPDATE")
 end
 
 function LetsPug:RegisterPlayerClass(player, class)
