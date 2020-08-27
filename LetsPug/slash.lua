@@ -89,13 +89,13 @@ LetsPug.slash = {
                 },
             }
         },
-        alts = {
+        alt = {
             name = "Alts",
             type = "group",
             order = 5,
             args = {
                 add = {
-                    name = "Add",
+                    name = "Add alt by name",
                     desc = "Marks character as your alt.",
                     usage = "<alt name>",
                     type = "input",
@@ -109,17 +109,21 @@ LetsPug.slash = {
                     order = 1
                 },
                 toggle = {
-                    name = "Toggle visibility",
-                    desc = "Toggles alt's visibility on/off.",
+                    name = "Show alt",
+                    desc = "Show/hide alt. Control click to delete.",
                     type = "multiselect",
                     values = "GetAltValuesSlash",
                     get = function(info, name)
                         return LetsPug:GetAltVisibility(name)
                     end,
                     set = function(info, name, is_shown)
-                        LetsPug:SetAltVisibility(name, is_shown)
+                        if IsControlKeyDown() then
+                            LetsPug:ClearAlt(name)
+                        else
+                            LetsPug:SetAltVisibility(name, is_shown)
+                        end
                     end,
-                    width = "full",
+                    width = "normal",
                     order = 2
                 },
                 delete = {
@@ -131,7 +135,7 @@ LetsPug.slash = {
                     set = function(info, name, ...)
                         LetsPug:ClearAlt(name)
                     end,
-                    width = "full",
+                    guiHidden = true,
                     order = 3
                 },
             }
