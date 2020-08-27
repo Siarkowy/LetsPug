@@ -58,9 +58,7 @@ function LetsPug:CheckGuildRosterPublicNote()
 
     if note_info ~= current_info and self:IsEditPublicNoteAvailable() then
         local new_note = self:CombineNoteSaveInfo(current_note, current_info)
-        if self.debug then
-            self:Print(("CheckGuildRosterPublicNote: old=%q new=%q"):format(current_note or "", new_note or ""))
-        end
+        self:Debug("CheckGuildRosterPublicNote:", current_note, "->", new_note)
         self:SetGuildRosterPublicNoteByName(self.player, new_note)
     end
 end

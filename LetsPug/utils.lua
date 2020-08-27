@@ -12,6 +12,13 @@ end
 
 LetsPug.wipe = wipe
 
+--- Dumps parameters into chat (debug mode only).
+function LetsPug:Debug(...)
+    if not self.debug then return end
+    self:Print(...)
+end
+
+--- Shows a formatted message in chat.
 function LetsPug:Printf(fmt, ...)
     self:Print(string.format(fmt, ...))
 end

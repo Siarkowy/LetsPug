@@ -139,9 +139,7 @@ end
 function LetsPug:GUILD_ROSTER_UPDATE()
     if not self.got_info then return end
 
-    if self.debug then
-        self:Print("GUILD_ROSTER_UPDATE")
-    end
+    self:Debug("GUILD_ROSTER_UPDATE")
 
     if self:IsPublicNoteSyncEnabled() then
         self:SyncFromGuildRosterPublicNotes()
@@ -152,15 +150,11 @@ end
 function LetsPug:FRIENDLIST_UPDATE()
     if not self.got_info then return end
 
-    if self.debug then
-        self:Print("FRIENDLIST_UPDATE")
-    end
+    self:Debug("FRIENDLIST_UPDATE")
 end
 
 function LetsPug:UPDATE_INSTANCE_INFO()
-    if self.debug then
-        self:Print("UPDATE_INSTANCE_INFO")
-    end
+    self:Debug("UPDATE_INSTANCE_INFO")
 
     self.got_info = true
     self:RefreshSavedInstances()

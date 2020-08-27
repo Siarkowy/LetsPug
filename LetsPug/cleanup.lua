@@ -17,9 +17,7 @@ function LetsPug:CleanupSaveTable(saves, now)
 end
 
 function LetsPug:CleanupInstanceSaves(...)
-    if self.debug then
-        self:Print("CleanupInstanceSaves", ...)
-    end
+    self:Debug("CleanupInstanceSaves", ...)
 
     for i = 1, select("#", ...) do
         local key = select(i, ...)
