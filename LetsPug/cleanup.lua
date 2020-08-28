@@ -19,9 +19,19 @@ end
 function LetsPug:CleanupInstanceSaves(...)
     self:Debug("CleanupInstanceSaves", ...)
 
+    if InCombatLockdown() then return end
     for i = 1, select("#", ...) do
         local key = select(i, ...)
         self:CleanupSaveTable(self.db.realm.instances[key])
+    end
+end
+
+local primes = {307, 331, 353, 359, 383}
+function LetsPug:ScheduleInstanceCleanup()
+    local i = 0
+    for inst_key, _ in pairs(self.db.realm.instances) do
+        self:ScheduleRepeatingTimer(function() self:CleanupInstanceSaves(inst_key) end, primes[i + 1])
+        i = (i + 1) % #primes
     end
 end
 

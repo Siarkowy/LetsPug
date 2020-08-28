@@ -132,12 +132,6 @@ function LetsPug:OnEnable()
     self:ScheduleInstanceCleanup()
 end
 
-function LetsPug:ScheduleInstanceCleanup()
-    self:ScheduleRepeatingTimer(function() self:CleanupInstanceSaves("k", "g", "m") end, 31)
-    self:ScheduleRepeatingTimer(function() self:CleanupInstanceSaves("s", "t", "z") end, 53)
-    self:ScheduleRepeatingTimer(function() self:CleanupInstanceSaves("h", "b", "p") end, 71)
-end
-
 function LetsPug:GUILD_ROSTER_UPDATE()
     if not self.got_info then return end
 
