@@ -31,6 +31,7 @@ instances.lua
 time.lua
 focus.lua
 encode.lua
+decode.lua
 guild.lua
 cleanup.lua
 slash.lua
