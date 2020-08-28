@@ -91,6 +91,8 @@ function RaidWatch:ShowTierInfo(cat, ...)
 
             tinsert(line, "text" .. (i + 1))
             tinsert(line, info)
+            tinsert(line, "hasCheck")
+            tinsert(line, true)
         end
         cat:AddLine(unpack(line))
     end
