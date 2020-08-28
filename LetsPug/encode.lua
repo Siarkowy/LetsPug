@@ -5,37 +5,6 @@
 
 local wipe = LetsPug.wipe
 
-local encode_abbrevs = {
-    kgm = "q",
-    kg = "M",
-    km = "G",
-    gm = "K",
-
-    stz = "w",
-    st = "Z",
-    sz = "T",
-    tz = "S",
-
-    hbp = "e",
-    hb = "P",
-    hp = "B",
-    bp = "H",
-
-    eqw = "a",
-    ewq = "a",
-    qew = "a",
-    qwe = "a",
-    weq = "a",
-    wqe = "a",
-
-    qw = "E",
-    qe = "W",
-    we = "Q",
-    wq = "E",
-    eq = "W",
-    ew = "Q",
-}
-
 local function less_than(a, b)
     return a < b
 end
@@ -102,12 +71,6 @@ function LetsPug:EncodeSaveInfo(saves, since)
     -- drop years
     save_info = gsub(save_info, "(%d%d%d%d)(%d+)", "%2")
 
-    -- apply complements
-    save_info = gsub(save_info, "[kgm]+", encode_abbrevs)
-    save_info = gsub(save_info, "[stz]+", encode_abbrevs)
-    save_info = gsub(save_info, "[hbp]+", encode_abbrevs)
-    save_info = gsub(save_info, "[qwe]+", encode_abbrevs)
-
     return save_info
 end
 
@@ -146,34 +109,11 @@ do
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0201, s = Y0131}, X1231), "s0131k01")
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0102, h = Y0103}, X1231), "k0101s02h03")
 
-    -- tier grouping
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101}, X1231), "q0101")
-    assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, t = Y0101, z = Y0101}, X1231), "w0101")
-    assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, b = Y0101, p = Y0101}, X1231), "e0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0101}, X1231), "a0101")
-
-    -- complements
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101}, X1231), "M0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, m = Y0101}, X1231), "G0101")
-    assertEqual(LetsPug:EncodeSaveInfo({g = Y0101, m = Y0101}, X1231), "K0101")
-
-    assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, t = Y0101}, X1231), "Z0101")
-    assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, z = Y0101}, X1231), "T0101")
-    assertEqual(LetsPug:EncodeSaveInfo({t = Y0101, z = Y0101}, X1231), "S0101")
-
-    assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, b = Y0101}, X1231), "P0101")
-    assertEqual(LetsPug:EncodeSaveInfo({h = Y0101, p = Y0101}, X1231), "B0101")
-    assertEqual(LetsPug:EncodeSaveInfo({b = Y0101, p = Y0101}, X1231), "H0101")
-
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101}, X1231), "E0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, h = Y0101, b = Y0101, p = Y0101}, X1231), "W0101")
-    assertEqual(LetsPug:EncodeSaveInfo({s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0101}, X1231), "Q0101")
-
     -- different reset for all instances
     assertEqual(LetsPug:EncodeSaveInfo({k = Y0101+0, g = Y0101+1, m = Y0101+2, s = Y0101+3, t = Y0101+4, z = Y0101+5, h = Y0101+6, b = Y0101+7, p = Y0101+8}, X1231), "k0101g02m03s04t05z06h07b08p09")
 
     -- all but one reset equal
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0102}, X1231), "EP0101p02")
+    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0102}, X1231), "kgmstzhb0101p02")
 
     -- unknown instances
     assertEqual(LetsPug:EncodeSaveInfo({x = Y0101}, X1231), "A1231")
