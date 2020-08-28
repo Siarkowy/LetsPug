@@ -7,6 +7,8 @@ local locale = GetLocale()
 
 -- /run for i=1,GetNumSavedInstances() do print(GetSavedInstanceInfo(i)) end
 local instance_keys = locale == "enUS" and {
+    -- ["Reserved"] = "x",
+
     ["Karazhan"] = "k",
     ["Gruul's Lair"] = "g",
     ["Magtheridon's Lair"] = "m",
