@@ -3,7 +3,7 @@
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-LetsPug.supportedInstanceKeys = "kgmstzhbp"
+LetsPug.supportedInstanceKeys = "kgmstzhbpno"
 
 local locale = GetLocale()
 
@@ -11,17 +11,24 @@ local locale = GetLocale()
 local instance_keys = locale == "enUS" and {
     -- ["Reserved"] = "x",
 
+    -- Tier 4
     ["Karazhan"] = "k",
     ["Gruul's Lair"] = "g",
     ["Magtheridon's Lair"] = "m",
 
+    -- Tier 5
     ["Coilfang: Serpentshrine Cavern"] = "s",
     ["Tempest Keep"] = "t",
     ["Zul'Aman"] = "z",
 
+    -- Tier 6
     ["The Battle for Mount Hyjal"] = "h",
     ["Black Temple"] = "b",
     ["The Sunwell"] = "p",
+
+    -- Vanilla
+    ["Naxxramas"] = "n",
+    ["Onyxia's Lair"] = "o",
 }
 or {
 }

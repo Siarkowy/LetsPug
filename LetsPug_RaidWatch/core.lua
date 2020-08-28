@@ -23,7 +23,7 @@ end
 
 function RaidWatch:GetPlayerExpandedSaveInfo(player)
     local now = LetsPug:GetServerNow()
-    local reset_str = "%k%g%m - %s%t%z - %h%b%p"
+    local reset_str = "%k%g%m - %s%t%z - %h%b%p - %n%o"
     local available_color, focused_color, saved_color = self:GetSaveColors()
 
     reset_str = reset_str:gsub("%%(%a)", function(instance_key)

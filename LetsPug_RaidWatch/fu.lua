@@ -19,6 +19,8 @@ local abbrev_instances = {
     h = "Hyjal Summit",
     b = "Black Temple",
     p = "Sunwell Plateau",
+    n = "Naxxramas",
+    o = "Onyxia's Lair",
 }
 
 function RaidWatch:OnFuInitialize()
@@ -63,6 +65,10 @@ function RaidWatch:OnUpdateFuBarTooltip()
 
     cat:AddLine("text", "|cffccccccTier 6|r")
     self:ShowTierInfo(cat, "h", "b", "p")
+    cat:AddLine()
+
+    cat:AddLine("text", "|cffccccccOther|r")
+    self:ShowTierInfo(cat, "n", "o")
 end
 
 function RaidWatch:ShowTierInfo(cat, ...)

@@ -10,10 +10,10 @@ local LetsPug = LetsPug
 local defaults = {
     profile = {
         alts = {
-            -- [name] = is_shown
+            -- [char_name] = is_shown
         },
         focused_instances = {
-            ["*"] = {
+            ["*"] = { -- [char_name]
                 -- [inst_key] = is_focused
             },
         },
@@ -28,26 +28,32 @@ local defaults = {
             -- hour_offset = 00,
         },
         saves = {
-            -- [name] = save_info
+            -- [char_name] = save_info
         },
         instances = {
+            -- key = { [char_name] = readable_date }
+
             -- Tier 4
-            k = {
-                -- [name] = readable_date
-            },
+            k = {},
             g = {},
             m = {},
+
             -- Tier 5
             s = {},
             t = {},
             z = {},
+
             -- Tier 6
             h = {},
             b = {},
             p = {},
+
+            -- Vanilla
+            n = {},
+            o = {},
         },
         classes = {
-            -- [name] = class_id
+            -- [char_name] = class_id
         }
     },
 }

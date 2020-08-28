@@ -131,5 +131,28 @@ LetsPug.slash.args.focus = {
             set = setSlashInstanceFocus("p"),
             order = 63
         },
+
+        other = {
+            name = "Other",
+            type = "header",
+            cmdHidden = true,
+            order = 70
+        },
+        naxx = {
+            name = "Naxxramas",
+            desc = "Toggle instance focus",
+            type = "toggle",
+            get = getSlashInstanceFocus("n"),
+            set = setSlashInstanceFocus("n"),
+            order = 71
+        },
+        ony = {
+            name = "Onyxia's Lair",
+            desc = "Toggle instance focus",
+            type = "toggle",
+            get = getSlashInstanceFocus("o"),
+            set = setSlashInstanceFocus("o"),
+            order = 72
+        },
     }
 }
