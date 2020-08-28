@@ -3,6 +3,10 @@
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
+local gsub = string.gsub
+local join = string.join
+local tinsert = table.insert
+
 local wipe = LetsPug.wipe
 
 local function less_than(a, b)
@@ -42,20 +46,22 @@ do
     end
 end
 
+local save_pairs = {}
 function LetsPug:EncodeSaveInfo(saves, since)
     local hr_frac = since and 0 or self:GetServerResetHour() / 24
 
     saves = saves or self.saves or {}
     since = since or self:GetReadableDateHourFromTimestamp(self:GetServerNow())
 
-    local function save(key)
+    wipe(save_pairs)
+    self.supportedInstanceKeys:gsub("%a", function(key)
         local expire_date = saves[key]
-        return expire_date and expire_date + hr_frac > since and format("%s%s", key, expire_date) or ""
-    end
+        local pair = expire_date and expire_date + hr_frac > since and format("%s%s", key, expire_date) or ""
+        tinsert(save_pairs, pair)
+    end)
 
     -- construct initial info in sorted reset order (ensures proper date shortening)
-    local save_info = format("%s%s%s%s%s%s%s%s%s", self:SortedByDate(
-        save"k", save"g", save"m", save"s", save"t", save"z", save"h", save"b", save"p"))
+    local save_info = join("", self:SortedByDate(unpack(save_pairs)))
     save_info = save_info == "" and format("A%d", since) or save_info
 
     -- combine equal dates

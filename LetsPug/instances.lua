@@ -3,6 +3,8 @@
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
+LetsPug.supportedInstanceKeys = "kgmstzhbp"
+
 local locale = GetLocale()
 
 -- /run for i=1,GetNumSavedInstances() do print(GetSavedInstanceInfo(i)) end

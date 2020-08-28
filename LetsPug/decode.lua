@@ -32,6 +32,8 @@ local decode_abbrevs = {
 }
 
 do
+    local supportedKeys = format("[%s]", LetsPug.supportedInstanceKeys)
+
     local saves = {}
     function LetsPug:DecodeSaveInfo(save_info, now)
         wipe(saves)
@@ -50,7 +52,7 @@ do
 
             -- store instance vs. recovered YYYYMMDD pair
             local readable = self:GetReadableDateFromShort(_month .. _day, now)
-            for instance_key in instance_keys:gmatch("[kgmstzhbp]") do
+            for instance_key in instance_keys:gmatch(supportedKeys) do
                 saves[instance_key] = readable
             end
         end
