@@ -4,17 +4,16 @@
 --------------------------------------------------------------------------------
 
 local LetsPug = LetsPug
-local focus_player = UnitName("player")
 
 local function getSlashInstanceFocus(instance_key)
     return function(info)
-        return LetsPug:GetPlayerInstanceFocus(focus_player, instance_key)
+        return LetsPug:GetPlayerInstanceFocus(LetsPug.player, instance_key)
     end
 end
 
 local function setSlashInstanceFocus(instance_key)
     return function(info, v)
-        return LetsPug:SetPlayerInstanceFocus(focus_player, instance_key, v)
+        return LetsPug:SetPlayerInstanceFocus(LetsPug.player, instance_key, v)
     end
 end
 
@@ -25,20 +24,6 @@ LetsPug.slash.args.focus = {
     desc = "Toggle instance focus",
     order = 2,
     args = {
-        player = {
-            name = "Current Player",
-            type = "select",
-            values = "GetAltValuesSlash",
-            get = function(info)
-                return focus_player
-            end,
-            set = function(info, name)
-                focus_player = name
-            end,
-            width = "full",
-            order = 1
-        },
-
         tier4 = {
             name = "Tier 4",
             type = "header",
