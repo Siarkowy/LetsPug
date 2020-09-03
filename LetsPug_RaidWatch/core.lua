@@ -91,8 +91,6 @@ function RaidWatch:OnInitialize()
         self.db.profile.focused_instances = nil
     end
 
-    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(self.name, LetsPug.slash)
-
     self:OnFuInitialize()
 end
 
