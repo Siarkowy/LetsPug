@@ -30,62 +30,69 @@ LetsPug.slash = {
             guiHidden = true,
             order = 0
         },
-        server = {
-            name = "Server",
+        set = {
+            name = "Settings",
             type = "group",
             order = 10,
             args = {
-                resethr = {
-                    name = "Server reset hour",
-                    desc = "Specifies at what hour do the instance saves reset. Needs to be provided in server timezone.",
-                    type = "range",
-                    min = 0,
-                    max = 23,
-                    step = 1,
-                    get = function(info)
-                        return LetsPug:GetServerResetHour()
-                    end,
-                    set = function(info, v)
-                        LetsPug:SetServerResetHour(v)
-                    end,
-                    width = "full",
-                    order = 10
+                time = {
+                    name = "Time Settings",
+                    type = "group",
+                    inline = true,
+                    order = 5,
+                    args = {
+                        resethr = {
+                            name = "Server reset hour",
+                            desc = "Specifies at what hour do the instance saves reset. Needs to be provided in server timezone.",
+                            type = "range",
+                            min = 0,
+                            max = 23,
+                            step = 1,
+                            get = function(info)
+                                return LetsPug:GetServerResetHour()
+                            end,
+                            set = function(info, v)
+                                LetsPug:SetServerResetHour(v)
+                            end,
+                            order = 10
+                        },
+                        tzoffset = {
+                            name = "Client to server hours",
+                            desc = "Difference between client and server timezones in hours. Positive value means client time is ahead of server time. Given a server in GMT (UTC+0) timezone, positive values apply to most of EU zone, while negative to NA.",
+                            type = "range",
+                            min = -10,
+                            max = 14,
+                            step = 1,
+                            get = function(info)
+                                return LetsPug:GetServerHourOffset()
+                            end,
+                            set = function(info, v)
+                                LetsPug:SetServerHourOffset(v)
+                            end,
+                            order = 11
+                        },
+                    }
                 },
-                tzoffset = {
-                    name = "Client to server hours",
-                    desc = "Difference between client and server timezones in hours. Positive value means client time is ahead of server time. Given a server in GMT (UTC+0) timezone, positive values apply to most of EU zone, while negative to NA.",
-                    type = "range",
-                    min = -10,
-                    max = 14,
-                    step = 1,
-                    get = function(info)
-                        return LetsPug:GetServerHourOffset()
-                    end,
-                    set = function(info, v)
-                        LetsPug:SetServerHourOffset(v)
-                    end,
-                    width = "full",
-                    order = 11
-                },
-            }
-        },
-        sync = {
-            name = "Sync",
-            type = "group",
-            order = 15,
-            args = {
-                pubnotes = {
-                    name = "Sync to/from public notes while in guild",
-                    desc = "When enabled, player's public note will be automatically edited with save info if player is able to edit public notes. Additionally, save info will be synced from other players' notes.",
-                    type = "toggle",
-                    get = function(info)
-                        return LetsPug:IsPublicNoteSyncEnabled()
-                    end,
-                    set = function(info, v)
-                        LetsPug:SetPublicNoteSyncEnabled(v)
-                    end,
-                    width = "full",
-                    order = 10
+                sync = {
+                    name = "Sync Settings",
+                    type = "group",
+                    inline = true,
+                    order = 15,
+                    args = {
+                        pubnotes = {
+                            name = "Sync to/from public notes while in guild",
+                            desc = "When enabled, player's public note will be automatically edited with save info if player is able to edit public notes. Additionally, save info will be synced from other players' notes.",
+                            type = "toggle",
+                            get = function(info)
+                                return LetsPug:IsPublicNoteSyncEnabled()
+                            end,
+                            set = function(info, v)
+                                LetsPug:SetPublicNoteSyncEnabled(v)
+                            end,
+                            width = "full",
+                            order = 10
+                        },
+                    }
                 },
             }
         },
