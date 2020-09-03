@@ -5,34 +5,29 @@
 
 LetsPug.supportedInstanceKeys = "kgmstzhbpno"
 
-local locale = GetLocale()
-
--- /run for i=1,GetNumSavedInstances() do print(GetSavedInstanceInfo(i)) end
-local instance_keys = locale == "enUS" and {
-    -- ["Reserved"] = "x",
+local abbrev_instances = {
+    -- x = "Reserved",
 
     -- Tier 4
-    ["Karazhan"] = "k",
-    ["Gruul's Lair"] = "g",
-    ["Magtheridon's Lair"] = "m",
+    k = "Karazhan",
+    g = "Gruul's Lair",
+    m = "Magtheridon's Lair",
 
     -- Tier 5
-    ["Coilfang: Serpentshrine Cavern"] = "s",
-    ["Tempest Keep"] = "t",
-    ["Zul'Aman"] = "z",
+    s = "Serpentshrine Cavern",
+    t = "Tempest Keep: Eye",
+    z = "Zul'Aman",
 
     -- Tier 6
-    ["The Battle for Mount Hyjal"] = "h",
-    ["Black Temple"] = "b",
-    ["The Sunwell"] = "p",
+    h = "Hyjal Summit",
+    b = "Black Temple",
+    p = "Sunwell Plateau",
 
     -- Vanilla
-    ["Naxxramas"] = "n",
-    ["Onyxia's Lair"] = "o",
-}
-or {
+    n = "Naxxramas",
+    o = "Onyxia's Lair",
 }
 
-function LetsPug:GetInstanceKey(name)
-    return instance_keys[name]
+function LetsPug:GetInstanceNameForKey(inst_key)
+    return abbrev_instances[inst_key]
 end

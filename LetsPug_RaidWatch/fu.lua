@@ -9,20 +9,6 @@ local RaidWatch = RaidWatch
 local tablet = LibStub("Tablet-2.0")
 local wipe = LetsPug.wipe
 
-local abbrev_instances = {
-    k = "Karazhan",
-    g = "Gruul's Lair",
-    m = "Magtheridon's Lair",
-    s = "Serpentshrine Cavern",
-    t = "Tempest Keep: Eye",
-    z = "Zul'Aman",
-    h = "Hyjal Summit",
-    b = "Black Temple",
-    p = "Sunwell Plateau",
-    n = "Naxxramas",
-    o = "Onyxia's Lair",
-}
-
 function RaidWatch:OnFuInitialize()
     self:SetFuBarOption("configType", "AceConfigDialog-3.0")
     self:SetFuBarOption("tooltipType", "Tablet-2.0")
@@ -80,7 +66,7 @@ function RaidWatch:ShowTierInfo(cat, ...)
 
         wipe(line)
         tinsert(line, "text")
-        tinsert(line, abbrev_instances[inst_key])
+        tinsert(line, LetsPug:GetInstanceNameForKey(inst_key))
         for i, player in ipairs(self.alts) do
             local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, inst_key)
             local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)

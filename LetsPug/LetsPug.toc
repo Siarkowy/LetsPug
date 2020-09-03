@@ -27,6 +27,7 @@ Libs\Dewdrop-2.0\Dewdrop-2.0.lua
 core.lua
 utils.lua
 testing.lua
+maps.lua
 instances.lua
 time.lua
 focus.lua

@@ -176,7 +176,7 @@ function LetsPug:RefreshSavedInstances()
 end
 
 function LetsPug:RegisterSavedInstance(name, expire_readable)
-    local instance_key = self:GetInstanceKey(name)
+    local instance_key = self:GetInstanceKeyForMap(name)
     if instance_key then
         self.saves[instance_key] = expire_readable
     end
