@@ -26,6 +26,7 @@ LetsPug.slash = {
             type = "execute",
             func = function(info)
                 InterfaceOptionsFrame_OpenToFrame(LetsPug.options)
+                LetsPug:SwitchOptionsToActiveTalentSpec()
             end,
             guiHidden = true,
             order = 0

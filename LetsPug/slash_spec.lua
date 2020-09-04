@@ -106,6 +106,14 @@ function LetsPug:LETSPUG_TALENTS_AVAILABLE()
     self.slash.args.spec.args = spec_tabs
 end
 
+--- Switches GUI to active talent spec configuration.
+function LetsPug:SwitchOptionsToActiveTalentSpec()
+    local spec_name, _ = LetsPug:GetActiveTalentSpec()
+    if not spec_name then return end
+
+    LibStub("AceConfigDialog-3.0"):SelectGroup(self.name, "spec", spec_name)
+end
+
 LetsPug.slash.args.spec = {
     type = "group",
     name = "Spec",

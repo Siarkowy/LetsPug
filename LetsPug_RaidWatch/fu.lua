@@ -6,15 +6,21 @@
 local LetsPug = LetsPug
 local RaidWatch = RaidWatch
 
+local AceConfigDialog30 = LibStub("AceConfigDialog-3.0")
 local tablet = LibStub("Tablet-2.0")
 local wipe = LetsPug.wipe
 
 function RaidWatch:OnFuInitialize()
-    self:SetFuBarOption("configType", "AceConfigDialog-3.0")
+    self:SetFuBarOption("configType", "Custom")
     self:SetFuBarOption("tooltipType", "Tablet-2.0")
     self:SetFuBarOption("defaultPosition", "RIGHT")
     self:SetFuBarOption("defaultMinimapPosition", 235)
     self:SetFuBarOption("iconPath", [[Interface\Icons\Spell_Nature_Invisibilty]]) -- [[Interface\ICONS\INV_Misc_GroupNeedMore]]
+end
+
+function RaidWatch:OnFuBarMouseDown(btn)
+    AceConfigDialog30:Open(LetsPug.name)
+    LetsPug:SwitchOptionsToActiveTalentSpec()
 end
 
 function RaidWatch:OnUpdateFuBarText()
