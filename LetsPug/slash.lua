@@ -150,3 +150,8 @@ LetsPug.slash = {
         },
     }
 }
+
+--- Switches GUI to alt configuration.
+function LetsPug:SwitchOptionsToAlts()
+    LibStub("AceConfigDialog-3.0"):SelectGroup(self.name, "alt")
+end

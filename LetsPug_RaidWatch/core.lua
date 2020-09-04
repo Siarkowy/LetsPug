@@ -104,3 +104,7 @@ function RaidWatch:RefreshAlts()
     end
     table.sort(self.alts)
 end
+
+function RaidWatch:HasAlts()
+    return #self.alts > 0
+end

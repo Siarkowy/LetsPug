@@ -20,6 +20,12 @@ end
 
 function RaidWatch:OnFuBarMouseDown(btn)
     AceConfigDialog30:Open(LetsPug.name)
+
+    if not self:HasAlts() then
+        LetsPug:SwitchOptionsToAlts()
+        return
+    end
+
     LetsPug:SwitchOptionsToActiveTalentSpec()
 end
 
@@ -33,8 +39,8 @@ end
 
 local line = {}
 function RaidWatch:OnUpdateFuBarTooltip()
-    if #self.alts == 0 then
-        return tablet:SetHint("All alts are hidden. Mark at least one visible.")
+    if not self:HasAlts() then
+        return tablet:SetHint("No alts are shown. Click to add at least one.")
     end
 
     wipe(line)
