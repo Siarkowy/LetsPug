@@ -22,7 +22,7 @@ LetsPug.slash = {
     args = {
         gui = {
             name = "GUI",
-            desc = "Shows graphical interface.",
+            desc = "Show Graphical Interface",
             type = "execute",
             func = function(info)
                 InterfaceOptionsFrame_OpenToFrame(LetsPug.options)
@@ -33,6 +33,7 @@ LetsPug.slash = {
         },
         set = {
             name = "Settings",
+            desc = "Manage Settings",
             type = "group",
             order = 10,
             args = {
@@ -99,6 +100,7 @@ LetsPug.slash = {
         },
         alt = {
             name = "Alts",
+            desc = "Manage Alts",
             type = "group",
             order = 5,
             args = {
