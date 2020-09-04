@@ -12,8 +12,11 @@ local defaults = {
         alts = {
             -- [char_name] = is_shown
         },
-        focused_instances = {
-            ["*"] = { -- [char_name]
+        specs = { -- player specs cache
+            -- [char_name] = active_spec_id
+        },
+        focus = { -- instance focus
+            ["*"] = { -- [char_name ":" spec_id]
                 -- [inst_key] = is_focused
             },
         },
@@ -79,6 +82,8 @@ function LetsPug:OnInitialize()
 
     self.options = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(self.name, "LetsPug")
     self.options.default = function() self.db:ResetProfile() end
+
+    self:RegisterMessage("LETSPUG_TALENTS_AVAILABLE")
 end
 
 function LetsPug:OnSlashCmd(input)
@@ -122,7 +127,8 @@ function LetsPug:OnEnable()
     self:RegisterEvent("FRIENDLIST_UPDATE")
     self:RegisterEvent("GUILD_ROSTER_UPDATE")
     self:RegisterEvent("UPDATE_INSTANCE_INFO")
-    self:RegisterEvent("PLAYER_ENTERING_WORLD", RequestRaidInfo)
+    self:RegisterEvent("PLAYER_ENTERING_WORLD")
+    self:RegisterEvent("PLAYER_ALIVE")
 
     ShowFriends()
     self:ScheduleRepeatingTimer(ShowFriends, 30)
@@ -136,6 +142,29 @@ function LetsPug:OnEnable()
     self:ScheduleRepeatingTimer(RequestRaidInfo, 60)
 
     self:ScheduleInstanceCleanup()
+end
+
+--- Fired (1) during login, (2) interface reload and (3) at every instance entry/leaving.
+-- During login, talent info is only available after PLAYER_ALIVE event.
+function LetsPug:PLAYER_ENTERING_WORLD()
+    RequestRaidInfo()
+    self:CheckTalents()
+end
+
+--- Fired after PLAYER_ENTERING_WORLD event, only during player login.
+-- Talent info is already available at this stage.
+function LetsPug:PLAYER_ALIVE()
+    self:CheckTalents()
+end
+
+--- If talents are available, stores current spec and notifies UI to refresh specs.
+function LetsPug:CheckTalents()
+    if not GetTalentTabInfo(1) then return end
+
+    local _, spec_id = self:GetActiveTalentSpec()
+    self:SetLastTalentSpecIdForPlayer(self.player, spec_id)
+
+    self:SendMessage("LETSPUG_TALENTS_AVAILABLE")
 end
 
 function LetsPug:GUILD_ROSTER_UPDATE()

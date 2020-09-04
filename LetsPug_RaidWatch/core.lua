@@ -29,7 +29,7 @@ function RaidWatch:GetPlayerExpandedSaveInfo(player)
     reset_str = reset_str:gsub("%%(%a)", function(instance_key)
         local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, instance_key)
         local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)
-        local is_focused = LetsPug:GetPlayerInstanceFocus(player, instance_key)
+        local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, instance_key)
         local is_saved = reset_time and reset_time > now
 
         local color = is_saved and saved_color or is_focused and focused_color or available_color
@@ -80,16 +80,6 @@ function RaidWatch:OnInitialize()
     self.db.RegisterCallback(self, "OnProfileChanged", function(event, db, newprofile)
         self:UpdateFuBarPlugin()
     end)
-
-    -- migrate existing instance focus data
-    if self.db.profile.focused_instances then
-        for player, info in pairs(self.db.profile.focused_instances) do
-            for instance, is_focused in pairs(info) do
-                LetsPug:SetPlayerInstanceFocus(player, instance, is_focused)
-            end
-        end
-        self.db.profile.focused_instances = nil
-    end
 
     self:OnFuInitialize()
 end

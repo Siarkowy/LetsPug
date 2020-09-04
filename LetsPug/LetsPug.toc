@@ -30,10 +30,10 @@ testing.lua
 maps.lua
 instances.lua
 time.lua
-focus.lua
+spec.lua
 encode.lua
 decode.lua
 guild.lua
 cleanup.lua
 slash.lua
-slash_focus.lua
+slash_spec.lua
