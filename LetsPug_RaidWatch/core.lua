@@ -86,7 +86,7 @@ end
 
 function RaidWatch:OnEnable()
     self:RegisterMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", "UpdateFuBarPlugin")
-    self:RegisterMessage("LETSPUG_PLAYER_FOCUS_UPDATE", "UpdateFuBarPlugin")
+    self:RegisterMessage("LETSPUG_PLAYER_SPEC_UPDATE", "UpdateFuBarPlugin")
     self:RegisterMessage("LETSPUG_ALTS_UPDATE", "RefreshAlts")
 end
 

@@ -18,6 +18,7 @@ local defaults = {
         focus = { -- instance focus
             ["*"] = { -- [char_name ":" spec_id]
                 -- [inst_key] = is_focused
+                -- role = "DAMAGER" | "TANK" | "HEALER" | false -- a la UnitCharacterPoints()
             },
         },
         sync = {

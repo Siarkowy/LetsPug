@@ -3,14 +3,47 @@
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-local SINGLE_SPEC_CLASSES = {
-    HUNTER = true,
-    MAGE = true,
-    ROGUE = true,
-    WARLOCK = true,
+LetsPug.RAID_ROLES = {
+    TANK = "TANK",
+    HEALER = "HEALER",
+    DAMAGER = "DAMAGER",
 }
+
+LetsPug.DEFAULT_ROLES = {
+    HUNTER = "DAMAGER",
+    MAGE = "DAMAGER",
+    ROGUE = "DAMAGER",
+    WARLOCK = "DAMAGER",
+
+    PriestDiscipline = "HEALER",
+    PriestHoly = "HEALER",
+    PriestShadow = "DAMAGER",
+
+    ShamanElementalCombat = "DAMAGER",
+    ShamanEnhancement = "DAMAGER",
+    ShamanRestoration = "HEALER",
+
+    PaladinHoly = "HEALER",
+    PaladinProtection = "TANK",
+    PaladinCombat = "DAMAGER",
+
+    DruidBalance = "DAMAGER",
+    DruidFeralCombat = "TANK",
+    DruidRestoration = "HEALER",
+
+    WarriorArms = "DAMAGER",
+    WarriorFury = "DAMAGER",
+    WarriorProtection = "TANK",
+
+    -- /run for t=1,3 do LetsPug:Debug(LetsPug:GetTalentSpecByTab(t)) end
+}
+
 function LetsPug:IsSingleSpecClass(class_id)
-    return SINGLE_SPEC_CLASSES[class_id]
+    return not not self.DEFAULT_ROLES[class_id]
+end
+
+function LetsPug:GetDefaultRoleForSpec(spec_id)
+    return assert(self.DEFAULT_ROLES[spec_id], spec_id)
 end
 
 function LetsPug:GetActiveTalentTabIndex()
@@ -48,10 +81,6 @@ end
 
 function LetsPug:SetLastTalentSpecIdForPlayer(player, spec_id)
     self.db.profile.specs[player] = spec_id
-
-    if player == self.player then
-        self:SendMessage("LETSPUG_PLAYER_FOCUS_UPDATE", self.player)
-    end
 end
 
 function LetsPug:GetPlayerInstanceFocus(player, spec_id, instance_key)
@@ -69,6 +98,32 @@ function LetsPug:SetPlayerInstanceFocus(player, spec_id, instance_key, v)
     self.db.profile.focus[spec_key][instance_key] = v or nil
 
     if player == self.player then
-        self:SendMessage("LETSPUG_PLAYER_FOCUS_UPDATE", self.player)
+        self:SendMessage("LETSPUG_PLAYER_SPEC_UPDATE", self.player)
     end
+end
+
+function LetsPug:GetPlayerRole(player, spec_id)
+    local spec_key = format("%s:%s", player, spec_id)
+    local spec_data = rawget(self.db.profile.focus, spec_key)
+
+    return spec_data and spec_data.role
+end
+
+--- Assigns a raid role to player's spec.
+-- A special value of `false` denotes a minor spec, which is intended for
+-- gearing up/"some day in the future" scenarios. A hidden spec is only
+-- advertised publicly if it is the active talent spec of the character.
+function LetsPug:SetPlayerRole(player, spec_id, role_id)
+    assert(not role_id or self.RAID_ROLES[role_id])
+
+    local spec_key = format("%s:%s", player, spec_id)
+    self.db.profile.focus[spec_key].role = role_id
+
+    if player == self.player then
+        self:SendMessage("LETSPUG_PLAYER_SPEC_UPDATE", self.player)
+    end
+end
+
+do
+    for _, role in pairs(LetsPug.DEFAULT_ROLES) do assert(LetsPug.RAID_ROLES[role], role) end
 end

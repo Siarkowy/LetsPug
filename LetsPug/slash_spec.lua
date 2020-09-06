@@ -29,8 +29,37 @@ local function getInstanceToggle(order, spec_id, inst_key)
     }
 end
 
+local function getRoleLabel(file, name)
+    return ("|TInterface\\AddOns\\LetsPug\\media\\%s:32:32:0:0:64:64:10:54:10:54|t %s"):format(file, name)
+end
+
+local function getRoleToggle(order, spec_id, role_id, role_name)
+    return {
+        name = getRoleLabel(role_id:lower(), role_name),
+        desc = role_name,
+        type = "toggle",
+        get = function(info)
+            return LetsPug:GetPlayerRole(LetsPug.player, spec_id) == role_id
+        end,
+        set = function(info, v)
+            LetsPug:SetPlayerRole(LetsPug.player, spec_id, v and role_id)
+        end,
+        order = order,
+    }
+end
+
 local function getTalentSpecConfig(spec_id)
     return {
+        role = {
+            name = "Role",
+            type = "header",
+            cmdHidden = true,
+            order = 10
+        },
+        tank   = getRoleToggle(11, spec_id, LetsPug.RAID_ROLES.TANK, "Tank"),
+        healer = getRoleToggle(12, spec_id, LetsPug.RAID_ROLES.HEALER, "Healer"),
+        dps    = getRoleToggle(13, spec_id, LetsPug.RAID_ROLES.DAMAGER, "DPS"),
+
         tier4 = {
             name = "Tier 4",
             type = "header",
