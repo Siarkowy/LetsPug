@@ -3,6 +3,8 @@
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
+local format = string.format
+
 --------------------------------------------------------------------------------
 -- Guild API wrappers
 --------------------------------------------------------------------------------
@@ -54,13 +56,21 @@ end
 function LetsPug:CheckGuildRosterPublicNote()
     local current_note = self:GetGuildRosterPublicNoteByName(self.player)
     local note_info = self:ExtractNoteSaveInfo(current_note)
-    local current_info = self:EncodeSaveInfo()
+    local current_info = self:GetPlayerGuildNote()
 
     if note_info ~= current_info and self:IsEditPublicNoteAvailable() then
         local new_note = self:CombineNoteSaveInfo(current_note, current_info)
         self:Debug("CheckGuildRosterPublicNote:", current_note, "->", new_note)
         self:SetGuildRosterPublicNoteByName(self.player, new_note)
     end
+end
+
+function LetsPug:GetPlayerGuildNote()
+    local role_info = self:GetPlayerRoleInfo()
+    local focus_info = self:GetPlayerFocusInfo()
+    local maybe_dot = focus_info ~= "" and "." or ""
+    local save_info = self:EncodeSaveInfo()
+    return format("%s:%s%s%s", role_info, focus_info, maybe_dot, save_info)
 end
 
 --- Synchronizes player save info from guild notes. Skips currently logged in player.
