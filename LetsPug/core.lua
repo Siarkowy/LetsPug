@@ -130,6 +130,7 @@ function LetsPug:OnEnable()
     self:RegisterEvent("UPDATE_INSTANCE_INFO")
     self:RegisterEvent("PLAYER_ENTERING_WORLD")
     self:RegisterEvent("PLAYER_ALIVE")
+    self:RegisterEvent("CHARACTER_POINTS_CHANGED")
 
     ShowFriends()
     self:ScheduleRepeatingTimer(ShowFriends, 30)
@@ -156,6 +157,12 @@ end
 -- Talent info is already available at this stage.
 function LetsPug:PLAYER_ALIVE()
     self:CheckTalents()
+end
+
+function LetsPug:CHARACTER_POINTS_CHANGED()
+    if UnitCharacterPoints("player") == 0 then
+        self:CheckTalents()
+    end
 end
 
 --- If talents are available, stores current spec and notifies UI to refresh specs.
