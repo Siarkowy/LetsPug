@@ -166,6 +166,12 @@ function LetsPug:CheckTalents()
     self:SetLastTalentSpecIdForPlayer(self.player, spec_id)
 
     self:SendMessage("LETSPUG_TALENTS_AVAILABLE")
+
+    -- assign default role if seen for the first time in this talent spec
+    if self:GetPlayerRole(self.player, spec_id) == nil then
+        local role_id = self:GetDefaultRoleForSpec(spec_id)
+        self:SetPlayerRole(self.player, spec_id, role_id)
+    end
 end
 
 function LetsPug:GUILD_ROSTER_UPDATE()
