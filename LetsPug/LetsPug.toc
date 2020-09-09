@@ -31,9 +31,10 @@ maps.lua
 instances.lua
 chars.lua
 time.lua
-spec.lua
 encode.lua
 decode.lua
+lockout.lua
+spec.lua
 guild.lua
 cleanup.lua
 slash.lua
