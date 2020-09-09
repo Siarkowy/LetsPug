@@ -5,6 +5,7 @@
 
 local format = string.format
 local gsub = string.gsub
+local strsplit = string.split
 
 LetsPug.RAID_ROLES = {
     TANK = "TANK",
@@ -16,6 +17,10 @@ LetsPug.RAID_ROLES_SHORT = {
     TANK = "T",
     HEALER = "H",
     DAMAGER = "D",
+
+    T = "TANK",
+    H = "HEALER",
+    D = "DAMAGER",
 }
 
 LetsPug.DEFAULT_ROLES = {
@@ -94,7 +99,10 @@ end
 
 function LetsPug:GetPlayerInstanceFocus(player, spec_id, instance_key)
     spec_id = spec_id or self:GetLastTalentSpecIdForPlayer(player)
-    if not spec_id then return false end
+    if not spec_id then
+        local info = self:GetPlayerSaveInfo(player)
+        return self:ExtractFocusInfoFromNote(info):find(instance_key)
+    end
 
     local spec_key = format("%s:%s", player, spec_id)
     local spec_data = self.db.profile.focus[spec_key]
@@ -173,6 +181,87 @@ function LetsPug:GetPlayerRoleInfo()
     return result
 end
 
+function LetsPug:ExtractFocusInfoFromNote(note)
+    note = note or ""
+    note = note:gsub("%.?(%a+)(%d?%d?)(%d%d)", "")
+    note = select(-1, strsplit(":", note))
+    return note:match("%a+") or ""
+end
+
+function LetsPug:ExtractRoleInfoFromNote(note)
+    note = note or ""
+    return note:match("([THDthd]+)[^:]*:") or "D"
+end
+
+do
+    local spec_data = {}
+    function LetsPug:DecodeSpecFromNote(note)
+        self.wipe(spec_data)
+
+        local focus_info = self:ExtractFocusInfoFromNote(note)
+        for key in focus_info:gmatch("%a") do
+            spec_data[key] = true
+        end
+
+        local role_info = self:ExtractRoleInfoFromNote(note)
+        for key in role_info:gmatch("[THD]") do
+            spec_data.role = spec_data.role or self.RAID_ROLES_SHORT[key]
+        end
+
+        return spec_data
+    end
+end
+
+function LetsPug:DecodePlayerSpecInfo(player)
+    local note = self:GetPlayerSaveInfo(player)
+    return self:DecodeSpecFromNote(note), note
+end
+
 do
     for _, role in pairs(LetsPug.DEFAULT_ROLES) do assert(LetsPug.RAID_ROLES[role], role) end
+
+    local assertEqual = LetsPug.assertEqual
+    local assertEqualKV = LetsPug.assertEqualKV
+
+    assertEqual(LetsPug:ExtractFocusInfoFromNote(), "")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote(""), "")
+
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("p"), "p")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("T:p"), "p")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("Td:p"), "p")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("TD:p"), "p")
+
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("p.A1020h"), "ph")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("T:p.A1020h"), "ph")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("Td:p.A1020h"), "ph")
+    assertEqual(LetsPug:ExtractFocusInfoFromNote("Td.1020:p.A1020h"), "ph")
+
+    assertEqual(LetsPug:ExtractRoleInfoFromNote(), "D")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote(""), "D")
+
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("p"), "D")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("T:p"), "T")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("Td:p"), "Td")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("TD:p"), "TD")
+
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("p.A1020h"), "D")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("T:p.A1020h"), "T")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("Td:p.A1020h"), "Td")
+    assertEqual(LetsPug:ExtractRoleInfoFromNote("Td.1020:p.A1020h"), "Td")
+
+    local DAMAGER = LetsPug.RAID_ROLES.DAMAGER
+    local TANK = LetsPug.RAID_ROLES.TANK
+
+    assertEqualKV(LetsPug:DecodeSpecFromNote(), { role = DAMAGER })
+    assertEqualKV(LetsPug:DecodeSpecFromNote(""), { role = DAMAGER })
+
+    assertEqualKV(LetsPug:DecodeSpecFromNote("p"), { role = DAMAGER, p = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("T:p"), { role = TANK, p = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("Td:p"), { role = TANK, p = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("TD:p"), { role = TANK, p = true })
+
+    assertEqualKV(LetsPug:DecodeSpecFromNote("p.A1020h"), { role = DAMAGER, p = true, h = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("T:p.A1020h"), { role = TANK, p = true, h = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("Td:p.A1020h"), { role = TANK, p = true, h = true })
+    assertEqualKV(LetsPug:DecodeSpecFromNote("Td.1020:p.A1020h"), { role = TANK, p = true, h = true })
 end
