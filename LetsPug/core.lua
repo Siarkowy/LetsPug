@@ -102,6 +102,12 @@ end
 --- Clears alt status from given character.
 function LetsPug:ClearAlt(name)
     self.db.profile.alts[name] = nil
+    self.db.profile.specs[name] = nil
+    for key, _ in pairs(self.db.profile.focus) do
+        if key:find(name) then
+            self.db.profile.focus[key] = nil
+        end
+    end
     self:SendMessage("LETSPUG_ALTS_UPDATE")
 end
 
