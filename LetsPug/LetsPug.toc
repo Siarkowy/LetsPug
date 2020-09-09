@@ -29,6 +29,7 @@ utils.lua
 testing.lua
 maps.lua
 instances.lua
+chars.lua
 time.lua
 spec.lua
 encode.lua

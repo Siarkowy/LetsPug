@@ -91,45 +91,6 @@ function LetsPug:OnSlashCmd(input)
     LibStub("AceConfigCmd-3.0").HandleCommand(self, "lp", self.name, input)
 end
 
---- Registers character as player's alt.
-function LetsPug:RegisterAlt(name)
-    name = self.StrToPascalCase(name)
-    if name and self:GetAltVisibility(name) == nil then
-        self:SetAltVisibility(name, true)
-    end
-end
-
---- Clears alt status from given character.
-function LetsPug:ClearAlt(name)
-    self.db.profile.alts[name] = nil
-    self.db.profile.specs[name] = nil
-    for key, _ in pairs(self.db.profile.focus) do
-        if key:find(name) then
-            self.db.profile.focus[key] = nil
-        end
-    end
-    self:SendMessage("LETSPUG_ALTS_UPDATE")
-end
-
---- Returns alt visiblity for GUIs.
-function LetsPug:GetAltVisibility(name)
-    return self.db.profile.alts[name]
-end
-
---- Sets alt visiblity for GUIs.
-function LetsPug:SetAltVisibility(name, is_shown)
-    self.db.profile.alts[name] = is_shown
-    self:SendMessage("LETSPUG_ALTS_UPDATE")
-end
-
-function LetsPug:RegisterPlayerClass(player, class)
-    self.db.realm.classes[player] = class
-end
-
-function LetsPug:GetPlayerClass(name)
-    return self.db.realm.classes[name] or select(2, UnitClass(name))
-end
-
 function LetsPug:OnEnable()
     self:RegisterEvent("FRIENDLIST_UPDATE")
     self:RegisterEvent("GUILD_ROSTER_UPDATE")
