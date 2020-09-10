@@ -106,7 +106,7 @@ LetsPug.slash = {
             args = {
                 add = {
                     name = "Add alt by name",
-                    desc = "Marks character as your alt.",
+                    desc = "Mark character as your alt",
                     usage = "<alt name>",
                     type = "input",
                     get = function(info)
@@ -120,7 +120,7 @@ LetsPug.slash = {
                 },
                 toggle = {
                     name = "Show alt",
-                    desc = "Show/hide alt. Control click to delete.",
+                    desc = "Show/hide alt. Control click to delete",
                     type = "multiselect",
                     values = "GetAltValuesSlash",
                     get = function(info, name)
@@ -138,7 +138,7 @@ LetsPug.slash = {
                 },
                 delete = {
                     name = "Delete",
-                    desc = "Clears alt mark from character, leaving instance save info intact.",
+                    desc = "Clear alt mark from character, leaving instance save info intact",
                     type = "select",
                     values = "GetAltValuesSlash",
                     get = function(info, name) end,
@@ -147,6 +147,25 @@ LetsPug.slash = {
                     end,
                     guiHidden = true,
                     order = 3
+                },
+                find = {
+                    name = "Find in Guild",
+                    desc = function(info)
+                        local alts = LetsPug:FindPlayerAlts(LetsPug.player)
+                        local count = 0
+                        for _, _ in pairs(alts) do count = count + 1 end
+                        return format("Mark %d |4guild character:guild characters; as alts. Works best with QDKP-style system, where alt's officer note contains {Main} info", count)
+                    end,
+                    type = "execute",
+                    func = function(info)
+                        local alts = LetsPug:FindPlayerAlts(LetsPug.player)
+                        for name, class in pairs(alts) do
+                            LetsPug:RegisterPlayerClass(name, class)
+                            LetsPug:RegisterAlt(name)
+                        end
+                    end,
+                    width = "full",
+                    order = 10
                 },
             }
         },

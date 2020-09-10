@@ -73,8 +73,8 @@ function LetsPug:OnInitialize()
         self:SetServerHourOffset(self:GuessServerHourOffset())
     end
 
-    self:RegisterAlt(self.player)
     self:RegisterPlayerClass(self.player, select(2, UnitClass("player")))
+    self:RegisterAlt(self.player)
 
     self.slash.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 

@@ -29,10 +29,43 @@ function LetsPug:GetGuildRosterPublicNoteByName(name, _note)
     return _note or select(7, self:GetGuildRosterInfoByName(name))
 end
 
+--- Returns officer note for given player.
+function LetsPug:GetGuildRosterOfficerNoteByName(name, _note)
+    return _note or select(8, self:GetGuildRosterInfoByName(name))
+end
+
 --- Sets public note for given player.
 function LetsPug:SetGuildRosterPublicNoteByName(name, note)
     if not self.HasPassed(8, "SetGuildRosterPublicNoteByName") then return end
     GuildRosterSetPublicNote(self:GetGuildRosterIndexByName(name), note)
+end
+
+--- Returns main name from QDKP-like note.
+function LetsPug:ExtractMainFromNote(note)
+    return (note or ""):match("{([^}]+)}")
+end
+
+local alts = {}
+--- Returns given player's alts as a `name = class` table.
+-- Character is considered an alt if its officer note either
+-- (1) equals the given player name or (2) contains a matching QDKP-style note.
+function LetsPug:FindPlayerAlts(player)
+    self.wipe(alts)
+    if not player or not IsInGuild() then return alts end
+
+    local note = self:GetGuildRosterOfficerNoteByName(player) or ""
+    local main = (self:ExtractMainFromNote(note) or player):lower()
+
+    for i = 1, GetNumGuildMembers(true) do
+        local name, _, _, _, _, _, note, onote, _, _, class = GetGuildRosterInfo(i)
+        local _main = (self:ExtractMainFromNote(onote) or name):lower()
+
+        if (_main == main or onote:trim():lower() == main) then
+            alts[name] = class
+        end
+    end
+
+    return alts
 end
 
 --------------------------------------------------------------------------------
