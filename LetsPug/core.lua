@@ -65,7 +65,7 @@ function LetsPug:OnInitialize()
     self.player = UnitName("player")
     self.saves = {}
 
-    self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, "Default")
+    self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, GetRealmName())
     self.db.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
     self.db.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
     self.db.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
