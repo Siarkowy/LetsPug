@@ -111,6 +111,19 @@ LetsPug.slash = {
                         },
                     }
                 },
+                debug = {
+                    name = "Debug Level",
+                    type = "select",
+                    values = { [0] = "INFO", "DEBUG", "TRACE" },
+                    get = function(info)
+                        return LetsPug.db.profile.debug
+                    end,
+                    set = function(info, v)
+                        LetsPug:SetDebug(v)
+                    end,
+                    guiHidden = true,
+                    order = 100
+                },
             }
         },
         alt = {
