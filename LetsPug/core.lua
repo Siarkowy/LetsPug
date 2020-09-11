@@ -67,7 +67,7 @@ function LetsPug:OnInitialize()
     self.saves = {}
 
     self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, "Default")
-    self.debug = self.db.profile.debug
+    self.debug = tonumber(self.db.profile.debug) or 0
 
     if not self:GetServerHourOffset() then
         self:SetServerHourOffset(self:GuessServerHourOffset())

@@ -12,10 +12,20 @@ end
 
 LetsPug.wipe = wipe
 
---- Dumps parameters into chat (debug mode only).
-function LetsPug:Debug(...)
-    if not self.debug then return end
+--- Dumps parameters into chat (only if current log level >= message level).
+function LetsPug:Log(level, ...)
+    if not self.debug or self.debug < level then return end
     self:Print(...)
+end
+
+function LetsPug:Debug(...) self:Log(1, "(D)", ...) end
+function LetsPug:Trace(...) self:Log(2, "(T)", ...) end
+
+--- Sets debug level.
+function LetsPug:SetDebug(level)
+    level = tonumber(level) or 0
+    self.db.profile.debug = level
+    self.debug = level
 end
 
 --- Shows a formatted message in chat.
