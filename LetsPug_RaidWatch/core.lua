@@ -74,17 +74,22 @@ local defaults = {
 }
 
 function RaidWatch:OnInitialize()
-    self:RefreshAlts()
-
     self.db = LetsPug.db:RegisterNamespace("RaidWatch", defaults)
-    self.db.RegisterCallback(self, "OnProfileChanged", function(event, db, newprofile)
-        self:UpdateFuBarPlugin()
-    end)
+    self.db.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
+    self.db.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
+    self.db.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
 
     self:OnFuInitialize()
 end
 
+function RaidWatch:OnProfileChanged()
+    self:Disable()
+    self:Enable()
+end
+
 function RaidWatch:OnEnable()
+    self:RefreshAlts()
+
     self:RegisterMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", "UpdateFuBarPlugin")
     self:RegisterMessage("LETSPUG_PLAYER_SPEC_UPDATE", "UpdateFuBarPlugin")
     self:RegisterMessage("LETSPUG_ALTS_UPDATE", "RefreshAlts")

@@ -66,10 +66,9 @@ function LetsPug:OnInitialize()
     self.saves = {}
 
     self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, "Default")
-    self.debug = tonumber(self.db.profile.debug) or 0
-
-    self:RegisterPlayerClass(self.player, select(2, UnitClass("player")))
-    self:RegisterAlt(self.player)
+    self.db.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
+    self.db.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
+    self.db.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
 
     self.slash.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 
@@ -86,7 +85,19 @@ function LetsPug:OnSlashCmd(input)
     LibStub("AceConfigCmd-3.0").HandleCommand(self, "lp", self.name, input)
 end
 
+function LetsPug:OnProfileChanged()
+    self:Disable()
+    self:Enable()
+end
+
 function LetsPug:OnEnable()
+    self.debug = tonumber(self.db.profile.debug) or 0
+
+    self:RegisterPlayerClass(self.player, select(2, UnitClass("player")))
+    self:RegisterAlt(self.player)
+
+    self:CheckTalents()
+
     self:RegisterEvent("FRIENDLIST_UPDATE")
     self:RegisterEvent("GUILD_ROSTER_UPDATE")
     self:RegisterEvent("UPDATE_INSTANCE_INFO")
