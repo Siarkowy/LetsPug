@@ -22,7 +22,7 @@ function RaidWatch.DecimalToHexColor(r, g, b) -- from http://wowprogramming.com/
 end
 
 function RaidWatch:GetPlayerExpandedSaveInfo(player)
-    local now = LetsPug:GetServerNow()
+    local now = time()
     local reset_str = "%k%g%m - %s%t%z - %h%b%p - %n%o"
     local available_color, focused_color, saved_color = self:GetSaveColors()
 

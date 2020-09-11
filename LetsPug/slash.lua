@@ -43,35 +43,50 @@ LetsPug.slash = {
                     inline = true,
                     order = 5,
                     args = {
-                        resethr = {
-                            name = "Server reset hour",
-                            desc = "Specifies at what hour do the instance saves reset. Needs to be provided in server timezone.",
-                            type = "range",
-                            min = 0,
-                            max = 23,
-                            step = 1,
+                        autotime = {
+                            name = "Automatic",
+                            desc = "Enable automatic time calibration. Settings will be adjusted after you get saved to any raid instance. It is highly recommended to keep this setting on.",
+                            type = "toggle",
                             get = function(info)
-                                return LetsPug:GetServerResetHour()
+                                return LetsPug:IsAutomaticTime()
                             end,
                             set = function(info, v)
-                                LetsPug:SetServerResetHour(v)
+                                LetsPug:SetAutomaticTime(v)
+                                if v then LetsPug:CalibrateTime(true) end
                             end,
+                            order = 5
+                        },
+                        resethr = {
+                            name = "Lockout Reset Hour",
+                            desc = "Specifies at what hour do the instance saves reset. Needs to be provided in UTC timezone.",
+                            type = "range",
+                            min = 0,
+                            max = 24,
+                            step = 0.5,
+                            get = function(info)
+                                return (LetsPug:GetServerResetOffset() or 0) / 3600
+                            end,
+                            set = function(info, v)
+                                LetsPug:SetServerResetOffset(v * 3600)
+                            end,
+                            disabled = "IsAutomaticTime",
                             order = 10
                         },
                         tzoffset = {
-                            name = "Client to server hours",
-                            desc = "Difference between client and server timezones in hours. Positive value means client time is ahead of server time. Given a server in GMT (UTC+0) timezone, positive values apply to most of EU zone, while negative to NA.",
+                            name = "Client Time Zone",
+                            desc = "Difference between your local and UTC time in hours. Positive value means local time is ahead of UTC time, and applies to Europe, Asia, Africa & Oceania, while negative to Americas.",
                             type = "range",
                             min = -10,
                             max = 14,
-                            step = 1,
+                            step = 0.25,
                             get = function(info)
-                                return LetsPug:GetServerHourOffset()
+                                return LetsPug:GetClientTimeOffset() / 3600
                             end,
                             set = function(info, v)
-                                LetsPug:SetServerHourOffset(v)
+                                LetsPug:SetClientTimeOffset(v * 3600)
                             end,
-                            order = 11
+                            disabled = "IsAutomaticTime",
+                            order = 9
                         },
                     }
                 },

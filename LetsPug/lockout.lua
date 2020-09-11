@@ -6,7 +6,7 @@
 function LetsPug:RefreshSavedInstances()
     for i = 1, GetNumSavedInstances() do
         local name, id, ttl = GetSavedInstanceInfo(i)
-        local expire_timestamp = self:GetServerNow() + ttl
+        local expire_timestamp = time() + ttl
         local expire_readable = self:GetReadableDateFromTimestamp(expire_timestamp)
         self:RegisterSavedInstance(name, expire_readable)
     end

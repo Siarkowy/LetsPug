@@ -6,7 +6,7 @@
 local DAY = 24 * 60 * 60
 
 function LetsPug:CleanupSaveTable(saves, now)
-    now = now and self:GetTimestampFromReadableDate(now) or self:GetServerNow()
+    now = now and self:GetTimestampFromReadableDate(now) or time()
     local since = self:GetReadableDateFromTimestamp(now - 14 * DAY)
 
     for k, readable in pairs(saves) do

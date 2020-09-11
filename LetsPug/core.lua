@@ -27,9 +27,8 @@ local defaults = {
         debug = false,
     },
     realm = {
-        server = {
-            reset_hour = 08,
-            -- hour_offset = 00,
+        time = {
+            automatic = true,
         },
         saves = {
             -- [char_name] = save_info
@@ -68,10 +67,6 @@ function LetsPug:OnInitialize()
 
     self.db = LibStub("AceDB-3.0"):New("LetsPugDB", defaults, "Default")
     self.debug = tonumber(self.db.profile.debug) or 0
-
-    if not self:GetServerHourOffset() then
-        self:SetServerHourOffset(self:GuessServerHourOffset())
-    end
 
     self:RegisterPlayerClass(self.player, select(2, UnitClass("player")))
     self:RegisterAlt(self.player)
@@ -167,6 +162,10 @@ end
 
 function LetsPug:UPDATE_INSTANCE_INFO()
     self:Debug("UPDATE_INSTANCE_INFO")
+
+    if self:IsAutomaticTime() then
+        self:CalibrateTime()
+    end
 
     self.got_info = true
     self:RefreshSavedInstances()

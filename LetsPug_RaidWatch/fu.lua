@@ -70,7 +70,7 @@ function RaidWatch:OnUpdateFuBarTooltip()
 end
 
 function RaidWatch:ShowTierInfo(cat, ...)
-    local now = LetsPug:GetServerNow()
+    local now = time()
     local available_color, focused_color, saved_color = self:GetSaveColors()
 
     for i = 1, select("#", ...) do

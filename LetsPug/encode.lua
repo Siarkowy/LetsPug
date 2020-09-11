@@ -46,12 +46,13 @@ do
     end
 end
 
+local DAY = 86400
 local save_pairs = {}
 function LetsPug:EncodeSaveInfo(saves, since)
-    local hr_frac = since and 0 or self:GetServerResetHour() / 24
+    local hr_frac = since and 0 or self:GetServerResetOffset() / DAY
 
     saves = saves or self.saves or {}
-    since = since or self:GetReadableDateHourFromTimestamp(self:GetServerNow())
+    since = since or self:GetReadableDateHourFromTimestamp(time())
 
     wipe(save_pairs)
     self.supportedInstanceKeys:gsub("%a", function(key)
