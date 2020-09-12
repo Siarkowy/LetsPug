@@ -113,10 +113,14 @@ function LetsPug:SyncFromGuildRosterPublicNotes()
         local player, _, _, _, _, _, note, _, _, _, class = GetGuildRosterInfo(i)
         local note_info = self:ExtractNoteSaveInfo(note)
         local current_info = self:GetPlayerSaveInfo(player)
-        if note_info and note_info ~= current_info and player ~= self.player then
+        if note_info and note_info ~= current_info then
             self:RegisterPlayerSaveInfo(player, note_info)
             self:RegisterPlayerClass(player, class)
+
             self:SendMessage("LETSPUG_GUILD_SAVEINFO_UPDATE", player, note_info)
+            if player == self.player then
+                self:SendMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", player, note_info)
+            end
         end
     end
 end
@@ -130,15 +134,26 @@ function LetsPug:IsEditPublicNoteAvailable(player)
     return not not select(10, GuildControlGetRankFlags())
 end
 
---- Returns true if public note sync is currently enabled.
-function LetsPug:IsPublicNoteSyncEnabled()
-    return self.db.profile.sync.public_notes
+--- Returns true if reading info from player notes is currently enabled.
+function LetsPug:IsReadPlayerNotesEnabled()
+    return self.db.profile.sync.read_notes
 end
 
---- Toggles public note sync on/off.
-function LetsPug:SetPublicNoteSyncEnabled(enabled)
+--- Toggles player note reading on/off.
+function LetsPug:SetReadPlayerNotesEnabled(enabled)
     enabled = not not enabled
-    self.db.profile.sync.public_notes = enabled
+    self.db.profile.sync.read_notes = enabled
+end
+
+--- Returns true if writing into to player notes is currently enabled.
+function LetsPug:IsWritePlayerNoteEnabled()
+    return self.db.profile.sync.write_notes
+end
+
+--- Toggles player note writing on/off.
+function LetsPug:SetWritePlayerNoteEnabled(enabled)
+    enabled = not not enabled
+    self.db.profile.sync.write_notes = enabled
 end
 
 --------------------------------------------------------------------------------

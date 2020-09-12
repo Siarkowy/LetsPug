@@ -82,7 +82,7 @@ function RaidWatch:ShowTierInfo(cat, ...)
         for i, player in ipairs(self.alts) do
             local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, inst_key)
             local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)
-            local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, inst_key)
+            local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, inst_key, true)
             local is_saved = reset_time and reset_time > now
     
             local color = is_saved and saved_color

@@ -96,18 +96,31 @@ LetsPug.slash = {
                     inline = true,
                     order = 15,
                     args = {
-                        pubnotes = {
-                            name = "Sync to/from public notes while in guild",
-                            desc = "When enabled, player's public note will be automatically edited with save info if player is able to edit public notes. Additionally, save info will be synced from other players' notes.",
+                        readnotes = {
+                            name = "Sync info from player notes while in guild",
+                            desc = "When enabled, players' notes will be read for lockout & spec info.",
                             type = "toggle",
                             get = function(info)
-                                return LetsPug:IsPublicNoteSyncEnabled()
+                                return LetsPug:IsReadPlayerNotesEnabled()
                             end,
                             set = function(info, v)
-                                LetsPug:SetPublicNoteSyncEnabled(v)
+                                LetsPug:SetReadPlayerNotesEnabled(v)
                             end,
                             width = "full",
                             order = 10
+                        },
+                        writenotes = {
+                            name = "Update my player note while in guild",
+                            desc = "When enabled, player's note will be automatically edited with lockout & spec info if player is able to edit notes.",
+                            type = "toggle",
+                            get = function(info)
+                                return LetsPug:IsWritePlayerNoteEnabled()
+                            end,
+                            set = function(info, v)
+                                LetsPug:SetWritePlayerNoteEnabled(v)
+                            end,
+                            width = "full",
+                            order = 15
                         },
                     }
                 },

@@ -29,7 +29,7 @@ function RaidWatch:GetPlayerExpandedSaveInfo(player)
     reset_str = reset_str:gsub("%%(%a)", function(instance_key)
         local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, instance_key)
         local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)
-        local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, instance_key)
+        local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, instance_key, true)
         local is_saved = reset_time and reset_time > now
 
         local color = is_saved and saved_color or is_focused and focused_color or available_color

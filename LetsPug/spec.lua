@@ -97,11 +97,15 @@ function LetsPug:SetLastTalentSpecIdForPlayer(player, spec_id)
     self.db.profile.specs[player] = spec_id
 end
 
-function LetsPug:GetPlayerInstanceFocus(player, spec_id, instance_key)
+function LetsPug:GetPlayerInstanceFocusFromNote(player, instance_key, note)
+    note = note or self:GetPlayerSaveInfo(player)
+    return self:ExtractFocusInfoFromNote(note):find(instance_key) ~= nil
+end
+
+function LetsPug:GetPlayerInstanceFocus(player, spec_id, instance_key, read_note)
     spec_id = spec_id or self:GetLastTalentSpecIdForPlayer(player)
-    if not spec_id then
-        local info = self:GetPlayerSaveInfo(player)
-        return self:ExtractFocusInfoFromNote(info):find(instance_key)
+    if not spec_id or read_note then
+        return self:GetPlayerInstanceFocusFromNote(player, instance_key)
     end
 
     local spec_key = format("%s:%s", player, spec_id)

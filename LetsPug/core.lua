@@ -22,7 +22,8 @@ local defaults = {
             },
         },
         sync = {
-            public_notes = true,
+            read_notes = true,
+            write_notes = true,
         },
         debug = false,
     },
@@ -159,8 +160,10 @@ function LetsPug:GUILD_ROSTER_UPDATE()
 
     self:Debug("GUILD_ROSTER_UPDATE")
 
-    if self:IsPublicNoteSyncEnabled() then
+    if self:IsReadPlayerNotesEnabled() then
         self:SyncFromGuildRosterPublicNotes()
+    end
+    if self:IsWritePlayerNoteEnabled() then
         self:CheckGuildRosterPublicNote()
     end
 end
