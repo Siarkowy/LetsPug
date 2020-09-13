@@ -98,7 +98,7 @@ LetsRaid.slash = {
                     args = {
                         readnotes = {
                             name = "Sync info from player notes while in guild",
-                            desc = "When enabled, players' notes will be read for lockout & spec info.",
+                            desc = "When enabled, other players' notes will be read for lockout & spec info.",
                             type = "toggle",
                             get = function(info)
                                 return LetsRaid:IsReadPlayerNotesEnabled()

@@ -89,21 +89,13 @@ end
 function LetsRaid:CheckGuildRosterPublicNote()
     local current_note = self:GetGuildRosterPublicNoteByName(self.player)
     local note_info = self:ExtractNoteSaveInfo(current_note)
-    local current_info = self:GetPlayerGuildNote()
+    local current_info = self:EncodePlayerInfo()
 
     if note_info ~= current_info and self:IsEditPublicNoteAvailable() then
         local new_note = self:CombineNoteSaveInfo(current_note, current_info)
         self:Debug("CheckGuildRosterPublicNote:", current_note, "->", new_note)
         self:SetGuildRosterPublicNoteByName(self.player, new_note)
     end
-end
-
-function LetsRaid:GetPlayerGuildNote()
-    local role_info = self:GetPlayerRoleInfo()
-    local focus_info = self:GetPlayerFocusInfo()
-    local maybe_dot = focus_info ~= "" and "." or ""
-    local save_info = self:EncodeSaveInfo()
-    return format("%s:%s%s%s", role_info, focus_info, maybe_dot, save_info)
 end
 
 --- Synchronizes player save info from guild notes. Skips currently logged in player.
@@ -113,14 +105,11 @@ function LetsRaid:SyncFromGuildRosterPublicNotes()
         local player, _, _, _, _, _, note, _, _, _, class = GetGuildRosterInfo(i)
         local note_info = self:ExtractNoteSaveInfo(note)
         local current_info = self:GetPlayerSaveInfo(player)
-        if note_info and note_info ~= current_info then
+        if note_info and note_info ~= current_info and player ~= self.player then
             self:RegisterPlayerSaveInfo(player, note_info)
             self:RegisterPlayerClass(player, class)
 
             self:SendMessage("LETSRAID_GUILD_SAVEINFO_UPDATE", player, note_info)
-            if player == self.player then
-                self:SendMessage("LETSRAID_PLAYER_SAVEINFO_UPDATE", player, note_info)
-            end
         end
     end
 end

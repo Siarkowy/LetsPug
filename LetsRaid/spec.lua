@@ -104,7 +104,7 @@ end
 
 function LetsRaid:GetPlayerInstanceFocus(player, spec_id, instance_key, read_note)
     spec_id = spec_id or self:GetLastTalentSpecIdForPlayer(player)
-    if not spec_id or read_note then
+    if not spec_id or player ~= self.player and read_note then
         return self:GetPlayerInstanceFocusFromNote(player, instance_key)
     end
 
@@ -219,6 +219,26 @@ end
 function LetsRaid:DecodePlayerSpecInfo(player)
     local note = self:GetPlayerSaveInfo(player)
     return self:DecodeSpecFromNote(note), note
+end
+
+--- Encodes a string of lockout & spec info for the current player.
+function LetsRaid:EncodePlayerInfo(save_info, focus_info, role_info)
+    save_info = save_info or self:EncodeSaveInfo()
+    focus_info = focus_info or self:GetPlayerFocusInfo()
+    role_info = role_info or self:GetPlayerRoleInfo()
+
+    local maybe_dot = focus_info ~= "" and "." or ""
+    return format("%s:%s%s%s", role_info, focus_info, maybe_dot, save_info)
+end
+
+--- Combines provided parts with existing lockout & spec info string.
+function LetsRaid:CombinePlayerInfo(info, save_info, focus_info, role_info)
+    info = info or ""
+    save_info = save_info or self:ExtractSaveInfoFromNote(info)
+    focus_info = focus_info or self:ExtractFocusInfoFromNote(info)
+    role_info = role_info or self:ExtractRoleInfoFromNote(info)
+
+    return self:EncodePlayerInfo(save_info, focus_info, role_info)
 end
 
 do

@@ -31,6 +31,24 @@ local decode_abbrevs = {
     a = "kgmstzhbp",
 }
 
+function LetsRaid:ExtractSaveInfoFromNote(note)
+    note = note or ""
+
+    -- work around unavailable note:match("(%a+%d+)+")
+    local start1, end1, start2, end2 = note:find("(%a+)(%d?%d?)(%d%d)")
+    local process = true
+    while process and end1 do
+        start2, end2 = note:find("(%a+)(%d?%d?)(%d%d)", end1 + 1)
+        if start2 then
+            end1 = end2
+        else
+            process = false
+        end
+    end
+
+    return start1 and note:sub(start1, end1)
+end
+
 do
     local supportedKeys = format("[%s]", LetsRaid.supportedInstanceKeys)
 
@@ -62,7 +80,50 @@ do
 end
 
 do
+    local assertEqual = LetsRaid.assertEqual
     local assertEqualKV = LetsRaid.assertEqualKV
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote(), nil)
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote(""), nil)
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("ks01h02"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("s"), nil)
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("k0101s"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("ks0101s"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("ks01h02s"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("s.k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("s.ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("s.ks01h02"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks01h02"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:s"), nil)
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:k0101s"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks0101s"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks01h02s"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:s.k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:s.ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:s.ks01h02"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th:ks01h02"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:s"), nil)
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:k0101s"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:ks0101s"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:ks01h02s"), "ks01h02")
+
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:s.k0101"), "k0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:s.ks0101"), "ks0101")
+    assertEqual(LetsRaid:ExtractSaveInfoFromNote("Th.1020:s.ks01h02"), "ks01h02")
 
     local X1231 = 20181231
     local Y0101 = 20190101
