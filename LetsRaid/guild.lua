@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
@@ -10,7 +10,7 @@ local format = string.format
 --------------------------------------------------------------------------------
 
 --- Returns guild roster index for specified player name, nil if not found.
-function LetsPug:GetGuildRosterIndexByName(name)
+function LetsRaid:GetGuildRosterIndexByName(name)
     for i = 1, GetNumGuildMembers(true) do
         if GetGuildRosterInfo(i) == name then
             return i
@@ -19,29 +19,29 @@ function LetsPug:GetGuildRosterIndexByName(name)
 end
 
 --- Returns guild roster info for given player.
-function LetsPug:GetGuildRosterInfoByName(name)
+function LetsRaid:GetGuildRosterInfoByName(name)
     local idx = self:GetGuildRosterIndexByName(name)
     return GetGuildRosterInfo(idx or 0)
 end
 
 --- Returns public note for given player.
-function LetsPug:GetGuildRosterPublicNoteByName(name, _note)
+function LetsRaid:GetGuildRosterPublicNoteByName(name, _note)
     return _note or select(7, self:GetGuildRosterInfoByName(name))
 end
 
 --- Returns officer note for given player.
-function LetsPug:GetGuildRosterOfficerNoteByName(name, _note)
+function LetsRaid:GetGuildRosterOfficerNoteByName(name, _note)
     return _note or select(8, self:GetGuildRosterInfoByName(name))
 end
 
 --- Sets public note for given player.
-function LetsPug:SetGuildRosterPublicNoteByName(name, note)
+function LetsRaid:SetGuildRosterPublicNoteByName(name, note)
     if not self.HasPassed(8, "SetGuildRosterPublicNoteByName") then return end
     GuildRosterSetPublicNote(self:GetGuildRosterIndexByName(name), note)
 end
 
 --- Returns main name from QDKP-like note.
-function LetsPug:ExtractMainFromNote(note)
+function LetsRaid:ExtractMainFromNote(note)
     return (note or ""):match("{([^}]+)}")
 end
 
@@ -49,7 +49,7 @@ local alts = {}
 --- Returns given player's alts as a `name = class` table.
 -- Character is considered an alt if its officer note either
 -- (1) equals the given player name or (2) contains a matching QDKP-style note.
-function LetsPug:FindPlayerAlts(player)
+function LetsRaid:FindPlayerAlts(player)
     self.wipe(alts)
     if not player or not IsInGuild() then return alts end
 
@@ -73,12 +73,12 @@ end
 --------------------------------------------------------------------------------
 
 --- Extracts save info from player note.
-function LetsPug:ExtractNoteSaveInfo(note)
+function LetsRaid:ExtractNoteSaveInfo(note)
     return (note or ""):match("!(.+)")
 end
 
 --- Replaces existing save info in guild note with provided one.
-function LetsPug:CombineNoteSaveInfo(current_note, save_info)
+function LetsRaid:CombineNoteSaveInfo(current_note, save_info)
     current_note = (current_note or ""):gsub("!.*", "")
     save_info = save_info or ""
     local excl = save_info ~= "" and "!" or ""
@@ -86,7 +86,7 @@ function LetsPug:CombineNoteSaveInfo(current_note, save_info)
 end
 
 --- Checks player save info and updates guild note if needed.
-function LetsPug:CheckGuildRosterPublicNote()
+function LetsRaid:CheckGuildRosterPublicNote()
     local current_note = self:GetGuildRosterPublicNoteByName(self.player)
     local note_info = self:ExtractNoteSaveInfo(current_note)
     local current_info = self:GetPlayerGuildNote()
@@ -98,7 +98,7 @@ function LetsPug:CheckGuildRosterPublicNote()
     end
 end
 
-function LetsPug:GetPlayerGuildNote()
+function LetsRaid:GetPlayerGuildNote()
     local role_info = self:GetPlayerRoleInfo()
     local focus_info = self:GetPlayerFocusInfo()
     local maybe_dot = focus_info ~= "" and "." or ""
@@ -107,8 +107,8 @@ function LetsPug:GetPlayerGuildNote()
 end
 
 --- Synchronizes player save info from guild notes. Skips currently logged in player.
--- Triggers LETSPUG_GUILD_SAVEINFO_UPDATE(player, info) event on any change detected.
-function LetsPug:SyncFromGuildRosterPublicNotes()
+-- Triggers LETSRAID_GUILD_SAVEINFO_UPDATE(player, info) event on any change detected.
+function LetsRaid:SyncFromGuildRosterPublicNotes()
     for i = 1, GetNumGuildMembers(true) do
         local player, _, _, _, _, _, note, _, _, _, class = GetGuildRosterInfo(i)
         local note_info = self:ExtractNoteSaveInfo(note)
@@ -117,16 +117,16 @@ function LetsPug:SyncFromGuildRosterPublicNotes()
             self:RegisterPlayerSaveInfo(player, note_info)
             self:RegisterPlayerClass(player, class)
 
-            self:SendMessage("LETSPUG_GUILD_SAVEINFO_UPDATE", player, note_info)
+            self:SendMessage("LETSRAID_GUILD_SAVEINFO_UPDATE", player, note_info)
             if player == self.player then
-                self:SendMessage("LETSPUG_PLAYER_SAVEINFO_UPDATE", player, note_info)
+                self:SendMessage("LETSRAID_PLAYER_SAVEINFO_UPDATE", player, note_info)
             end
         end
     end
 end
 
 --- Returns true if specified player is able to edit public notes.
-function LetsPug:IsEditPublicNoteAvailable(player)
+function LetsRaid:IsEditPublicNoteAvailable(player)
     local name, _, rank = self:GetGuildRosterInfoByName(player or self.player)
     if not name then return end
 
@@ -135,23 +135,23 @@ function LetsPug:IsEditPublicNoteAvailable(player)
 end
 
 --- Returns true if reading info from player notes is currently enabled.
-function LetsPug:IsReadPlayerNotesEnabled()
+function LetsRaid:IsReadPlayerNotesEnabled()
     return self.db.profile.sync.read_notes
 end
 
 --- Toggles player note reading on/off.
-function LetsPug:SetReadPlayerNotesEnabled(enabled)
+function LetsRaid:SetReadPlayerNotesEnabled(enabled)
     enabled = not not enabled
     self.db.profile.sync.read_notes = enabled
 end
 
 --- Returns true if writing into to player notes is currently enabled.
-function LetsPug:IsWritePlayerNoteEnabled()
+function LetsRaid:IsWritePlayerNoteEnabled()
     return self.db.profile.sync.write_notes
 end
 
 --- Toggles player note writing on/off.
-function LetsPug:SetWritePlayerNoteEnabled(enabled)
+function LetsRaid:SetWritePlayerNoteEnabled(enabled)
     enabled = not not enabled
     self.db.profile.sync.write_notes = enabled
 end
@@ -161,37 +161,37 @@ end
 --------------------------------------------------------------------------------
 
 do
-    local assertEqual = LetsPug.assertEqual
+    local assertEqual = LetsRaid.assertEqual
 
-    assertEqual(LetsPug:ExtractNoteSaveInfo("abc!def!ghi"), "def!ghi")
-    assertEqual(LetsPug:ExtractNoteSaveInfo("abc!def"), "def")
-    assertEqual(LetsPug:ExtractNoteSaveInfo("abc!"), nil)
-    assertEqual(LetsPug:ExtractNoteSaveInfo("!def"), "def")
-    assertEqual(LetsPug:ExtractNoteSaveInfo("abc"), nil)
-    assertEqual(LetsPug:ExtractNoteSaveInfo(""), nil)
-    assertEqual(LetsPug:ExtractNoteSaveInfo(nil), nil)
+    assertEqual(LetsRaid:ExtractNoteSaveInfo("abc!def!ghi"), "def!ghi")
+    assertEqual(LetsRaid:ExtractNoteSaveInfo("abc!def"), "def")
+    assertEqual(LetsRaid:ExtractNoteSaveInfo("abc!"), nil)
+    assertEqual(LetsRaid:ExtractNoteSaveInfo("!def"), "def")
+    assertEqual(LetsRaid:ExtractNoteSaveInfo("abc"), nil)
+    assertEqual(LetsRaid:ExtractNoteSaveInfo(""), nil)
+    assertEqual(LetsRaid:ExtractNoteSaveInfo(nil), nil)
 
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def!ghi", "A0101"), "abc!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def", "A0101"), "abc!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!", "A0101"), "abc!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo("!def", "A0101"), "!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc", "A0101"), "abc!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo("", "A0101"), "!A0101")
-    assertEqual(LetsPug:CombineNoteSaveInfo(nil, "A0101"), "!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def!ghi", "A0101"), "abc!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def", "A0101"), "abc!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!", "A0101"), "abc!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("!def", "A0101"), "!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc", "A0101"), "abc!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("", "A0101"), "!A0101")
+    assertEqual(LetsRaid:CombineNoteSaveInfo(nil, "A0101"), "!A0101")
 
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def!ghi", ""), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def", ""), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!", ""), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("!def", ""), "")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc", ""), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("", ""), "")
-    assertEqual(LetsPug:CombineNoteSaveInfo(nil, ""), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def!ghi", ""), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def", ""), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!", ""), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("!def", ""), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc", ""), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("", ""), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo(nil, ""), "")
 
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def!ghi", nil), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!def", nil), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc!", nil), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("!def", nil), "")
-    assertEqual(LetsPug:CombineNoteSaveInfo("abc", nil), "abc")
-    assertEqual(LetsPug:CombineNoteSaveInfo("", nil), "")
-    assertEqual(LetsPug:CombineNoteSaveInfo(nil, nil), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def!ghi", nil), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!def", nil), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc!", nil), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("!def", nil), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("abc", nil), "abc")
+    assertEqual(LetsRaid:CombineNoteSaveInfo("", nil), "")
+    assertEqual(LetsRaid:CombineNoteSaveInfo(nil, nil), "")
 end

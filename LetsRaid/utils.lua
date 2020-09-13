@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
@@ -10,32 +10,32 @@ local function wipe(t)
     end
 end
 
-LetsPug.wipe = wipe
+LetsRaid.wipe = wipe
 
 --- Dumps parameters into chat (only if current log level >= message level).
-function LetsPug:Log(level, ...)
+function LetsRaid:Log(level, ...)
     if not self.debug or self.debug < level then return end
     self:Print(...)
 end
 
-function LetsPug:Debug(...) self:Log(1, "(D)", ...) end
-function LetsPug:Trace(...) self:Log(2, "(T)", ...) end
+function LetsRaid:Debug(...) self:Log(1, "(D)", ...) end
+function LetsRaid:Trace(...) self:Log(2, "(T)", ...) end
 
 --- Sets debug level.
-function LetsPug:SetDebug(level)
+function LetsRaid:SetDebug(level)
     level = tonumber(level) or 0
     self.db.profile.debug = level
     self.debug = level
 end
 
 --- Shows a formatted message in chat.
-function LetsPug:Printf(fmt, ...)
+function LetsRaid:Printf(fmt, ...)
     self:Print(string.format(fmt, ...))
 end
 
 --- Returns input string in Pascal case (upper case first, lower case rest).
 -- Appropriate for character names.
-function LetsPug.StrToPascalCase(str)
+function LetsRaid.StrToPascalCase(str)
     if not str or str == "" then return nil end
     str = str:sub(1, 1):upper() .. str:sub(2):lower()
     return str
@@ -43,12 +43,12 @@ end
 
 do
     local _timers = {}
-    LetsPug.timers = _timers
+    LetsRaid.timers = _timers
 
     --- Returns true if specified timer has passed the desired interval.
     -- Timers are stored in an (optionally specified) array, and are
     -- distinguished by an (optional) key, likely related to caller function.
-    function LetsPug.HasPassed(interval, key, timers)
+    function LetsRaid.HasPassed(interval, key, timers)
         assert(interval)
         assert(type(interval) == "number")
         key = key or "timer"

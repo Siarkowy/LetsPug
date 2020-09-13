@@ -1,22 +1,22 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-local LetsPug = LetsPug
-local wipe = LetsPug.wipe
+local LetsRaid = LetsRaid
+local wipe = LetsRaid.wipe
 
 local alts = {}
-function LetsPug:GetAltValuesSlash(info)
+function LetsRaid:GetAltValuesSlash(info)
     wipe(alts)
-    for name, _ in pairs(LetsPug.db.profile.alts) do
+    for name, _ in pairs(LetsRaid.db.profile.alts) do
         alts[name] = name
     end
     return alts
 end
 
-LetsPug.slash = {
-    handler = LetsPug,
+LetsRaid.slash = {
+    handler = LetsRaid,
     type = "group",
     childGroups = "tab",
     args = {
@@ -25,8 +25,8 @@ LetsPug.slash = {
             desc = "Show Graphical Interface",
             type = "execute",
             func = function(info)
-                InterfaceOptionsFrame_OpenToFrame(LetsPug.options)
-                LetsPug:SwitchOptionsToActiveTalentSpec()
+                InterfaceOptionsFrame_OpenToFrame(LetsRaid.options)
+                LetsRaid:SwitchOptionsToActiveTalentSpec()
             end,
             guiHidden = true,
             order = 0
@@ -48,11 +48,11 @@ LetsPug.slash = {
                             desc = "Enable automatic time calibration. Settings will be adjusted after you get saved to any raid instance. It is highly recommended to keep this setting on.",
                             type = "toggle",
                             get = function(info)
-                                return LetsPug:IsAutomaticTime()
+                                return LetsRaid:IsAutomaticTime()
                             end,
                             set = function(info, v)
-                                LetsPug:SetAutomaticTime(v)
-                                if v then LetsPug:CalibrateTime(true) end
+                                LetsRaid:SetAutomaticTime(v)
+                                if v then LetsRaid:CalibrateTime(true) end
                             end,
                             order = 5
                         },
@@ -64,10 +64,10 @@ LetsPug.slash = {
                             max = 24,
                             step = 0.5,
                             get = function(info)
-                                return (LetsPug:GetServerResetOffset() or 0) / 3600
+                                return (LetsRaid:GetServerResetOffset() or 0) / 3600
                             end,
                             set = function(info, v)
-                                LetsPug:SetServerResetOffset(v * 3600)
+                                LetsRaid:SetServerResetOffset(v * 3600)
                             end,
                             disabled = "IsAutomaticTime",
                             order = 10
@@ -80,10 +80,10 @@ LetsPug.slash = {
                             max = 14,
                             step = 0.25,
                             get = function(info)
-                                return LetsPug:GetClientTimeOffset() / 3600
+                                return LetsRaid:GetClientTimeOffset() / 3600
                             end,
                             set = function(info, v)
-                                LetsPug:SetClientTimeOffset(v * 3600)
+                                LetsRaid:SetClientTimeOffset(v * 3600)
                             end,
                             disabled = "IsAutomaticTime",
                             order = 9
@@ -101,10 +101,10 @@ LetsPug.slash = {
                             desc = "When enabled, players' notes will be read for lockout & spec info.",
                             type = "toggle",
                             get = function(info)
-                                return LetsPug:IsReadPlayerNotesEnabled()
+                                return LetsRaid:IsReadPlayerNotesEnabled()
                             end,
                             set = function(info, v)
-                                LetsPug:SetReadPlayerNotesEnabled(v)
+                                LetsRaid:SetReadPlayerNotesEnabled(v)
                             end,
                             width = "full",
                             order = 10
@@ -114,10 +114,10 @@ LetsPug.slash = {
                             desc = "When enabled, player's note will be automatically edited with lockout & spec info if player is able to edit notes.",
                             type = "toggle",
                             get = function(info)
-                                return LetsPug:IsWritePlayerNoteEnabled()
+                                return LetsRaid:IsWritePlayerNoteEnabled()
                             end,
                             set = function(info, v)
-                                LetsPug:SetWritePlayerNoteEnabled(v)
+                                LetsRaid:SetWritePlayerNoteEnabled(v)
                             end,
                             width = "full",
                             order = 15
@@ -129,10 +129,10 @@ LetsPug.slash = {
                     type = "select",
                     values = { [0] = "INFO", "DEBUG", "TRACE" },
                     get = function(info)
-                        return LetsPug.db.profile.debug
+                        return LetsRaid.db.profile.debug
                     end,
                     set = function(info, v)
-                        LetsPug:SetDebug(v)
+                        LetsRaid:SetDebug(v)
                     end,
                     guiHidden = true,
                     order = 100
@@ -154,7 +154,7 @@ LetsPug.slash = {
                         return ""
                     end,
                     set = function(info, name)
-                        LetsPug:RegisterAlt(name)
+                        LetsRaid:RegisterAlt(name)
                     end,
                     width = "full",
                     order = 1
@@ -165,13 +165,13 @@ LetsPug.slash = {
                     type = "multiselect",
                     values = "GetAltValuesSlash",
                     get = function(info, name)
-                        return LetsPug:GetAltVisibility(name)
+                        return LetsRaid:GetAltVisibility(name)
                     end,
                     set = function(info, name, is_shown)
                         if IsControlKeyDown() then
-                            LetsPug:ClearAlt(name)
+                            LetsRaid:ClearAlt(name)
                         else
-                            LetsPug:SetAltVisibility(name, is_shown)
+                            LetsRaid:SetAltVisibility(name, is_shown)
                         end
                     end,
                     width = "normal",
@@ -184,7 +184,7 @@ LetsPug.slash = {
                     values = "GetAltValuesSlash",
                     get = function(info, name) end,
                     set = function(info, name, ...)
-                        LetsPug:ClearAlt(name)
+                        LetsRaid:ClearAlt(name)
                     end,
                     guiHidden = true,
                     order = 3
@@ -192,17 +192,17 @@ LetsPug.slash = {
                 find = {
                     name = "Find in Guild",
                     desc = function(info)
-                        local alts = LetsPug:FindPlayerAlts(LetsPug.player)
+                        local alts = LetsRaid:FindPlayerAlts(LetsRaid.player)
                         local count = 0
                         for _, _ in pairs(alts) do count = count + 1 end
                         return format("Mark %d |4guild character:guild characters; as alts. Works best with QDKP-style system, where alt's officer note contains {Main} info", count)
                     end,
                     type = "execute",
                     func = function(info)
-                        local alts = LetsPug:FindPlayerAlts(LetsPug.player)
+                        local alts = LetsRaid:FindPlayerAlts(LetsRaid.player)
                         for name, class in pairs(alts) do
-                            LetsPug:RegisterPlayerClass(name, class)
-                            LetsPug:RegisterAlt(name)
+                            LetsRaid:RegisterPlayerClass(name, class)
+                            LetsRaid:RegisterAlt(name)
                         end
                     end,
                     width = "full",
@@ -214,6 +214,6 @@ LetsPug.slash = {
 }
 
 --- Switches GUI to alt configuration.
-function LetsPug:SwitchOptionsToAlts()
+function LetsRaid:SwitchOptionsToAlts()
     LibStub("AceConfigDialog-3.0"):SelectGroup(self.name, "alt")
 end

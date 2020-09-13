@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-LetsPug.supportedInstanceKeys = "kgmstzhbpno"
+LetsRaid.supportedInstanceKeys = "kgmstzhbpno"
 
 local abbrev_instances = {
     -- x = "Reserved",
@@ -28,6 +28,6 @@ local abbrev_instances = {
     o = "Onyxia's Lair",
 }
 
-function LetsPug:GetInstanceNameForKey(inst_key)
+function LetsRaid:GetInstanceNameForKey(inst_key)
     return abbrev_instances[inst_key]
 end

@@ -1,24 +1,24 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-local LetsPug = LetsPug
+local LetsRaid = LetsRaid
 
 local function getSlashInstanceFocus(spec_id, instance_key)
     return function(info)
-        return LetsPug:GetPlayerInstanceFocus(LetsPug.player, spec_id, instance_key)
+        return LetsRaid:GetPlayerInstanceFocus(LetsRaid.player, spec_id, instance_key)
     end
 end
 
 local function setSlashInstanceFocus(spec_id, instance_key)
     return function(info, v)
-        return LetsPug:SetPlayerInstanceFocus(LetsPug.player, spec_id, instance_key, v)
+        return LetsRaid:SetPlayerInstanceFocus(LetsRaid.player, spec_id, instance_key, v)
     end
 end
 
 local function getInstanceToggle(order, spec_id, inst_key)
-    local inst_name = LetsPug:GetInstanceNameForKey(inst_key)
+    local inst_name = LetsRaid:GetInstanceNameForKey(inst_key)
     return {
         name = inst_name,
         type = "toggle",
@@ -30,7 +30,7 @@ local function getInstanceToggle(order, spec_id, inst_key)
 end
 
 local function getRoleLabel(file, name)
-    return ("|TInterface\\AddOns\\LetsPug\\media\\%s:32:32:0:0:64:64:10:54:10:54|t %s"):format(file, name)
+    return ("|TInterface\\AddOns\\LetsRaid\\media\\%s:32:32:0:0:64:64:10:54:10:54|t %s"):format(file, name)
 end
 
 local function getRoleToggle(order, spec_id, role_id, role_name)
@@ -39,10 +39,10 @@ local function getRoleToggle(order, spec_id, role_id, role_name)
         desc = role_name,
         type = "toggle",
         get = function(info)
-            return LetsPug:GetPlayerRole(LetsPug.player, spec_id) == role_id
+            return LetsRaid:GetPlayerRole(LetsRaid.player, spec_id) == role_id
         end,
         set = function(info, v)
-            LetsPug:SetPlayerRole(LetsPug.player, spec_id, v and role_id)
+            LetsRaid:SetPlayerRole(LetsRaid.player, spec_id, v and role_id)
         end,
         order = order,
     }
@@ -56,9 +56,9 @@ local function getTalentSpecConfig(spec_id)
             cmdHidden = true,
             order = 10
         },
-        tank   = getRoleToggle(11, spec_id, LetsPug.RAID_ROLES.TANK, "Tank"),
-        healer = getRoleToggle(12, spec_id, LetsPug.RAID_ROLES.HEALER, "Healer"),
-        dps    = getRoleToggle(13, spec_id, LetsPug.RAID_ROLES.DAMAGER, "DPS"),
+        tank   = getRoleToggle(11, spec_id, LetsRaid.RAID_ROLES.TANK, "Tank"),
+        healer = getRoleToggle(12, spec_id, LetsRaid.RAID_ROLES.HEALER, "Healer"),
+        dps    = getRoleToggle(13, spec_id, LetsRaid.RAID_ROLES.DAMAGER, "DPS"),
 
         tier4 = {
             name = "Tier 4",
@@ -101,10 +101,10 @@ local function getTalentSpecConfig(spec_id)
     }
 end
 
-function LetsPug:LETSPUG_TALENTS_AVAILABLE()
-    self:UnregisterMessage("LETSPUG_TALENTS_AVAILABLE")
+function LetsRaid:LETSRAID_TALENTS_AVAILABLE()
+    self:UnregisterMessage("LETSRAID_TALENTS_AVAILABLE")
 
-    self:Debug("LETSPUG_TALENTS_AVAILABLE")
+    self:Debug("LETSRAID_TALENTS_AVAILABLE")
     local spec_tabs = {}
 
     local class_name, class_id = UnitClass("player")
@@ -136,18 +136,18 @@ function LetsPug:LETSPUG_TALENTS_AVAILABLE()
 end
 
 --- Switches GUI to active talent spec configuration.
-function LetsPug:SwitchOptionsToActiveTalentSpec()
-    local spec_name, _ = LetsPug:GetActiveTalentSpec()
+function LetsRaid:SwitchOptionsToActiveTalentSpec()
+    local spec_name, _ = LetsRaid:GetActiveTalentSpec()
     if not spec_name then return end
 
     LibStub("AceConfigDialog-3.0"):SelectGroup(self.name, "spec", spec_name)
 end
 
-LetsPug.slash.args.spec = {
+LetsRaid.slash.args.spec = {
     type = "group",
     name = "Spec",
     desc = "Configure Raid Specs",
     order = 2,
     childGroups = "tab",
-    args = {} -- placeholder before LETSPUG_TALENTS_AVAILABLE is fired
+    args = {} -- placeholder before LETSRAID_TALENTS_AVAILABLE is fired
 }

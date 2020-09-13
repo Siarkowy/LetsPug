@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ local time = time
 
 local GetQuestResetTime = GetQuestResetTime
 
-local wipe = LetsPug.wipe
+local wipe = LetsRaid.wipe
 
 local MINUTE = 60
 local HOUR   = 60 * MINUTE
@@ -25,7 +25,7 @@ local function toHHMM(t) -- from http://lua-users.org/wiki/TimeZone
     return format("%+.4d", 100 * h + 60 * m)
 end
 
-LetsPug.toHHMM = toHHMM
+LetsRaid.toHHMM = toHHMM
 
 local function toISO8601(utc_t, utc_dt)
     if not utc_t then return end
@@ -37,21 +37,21 @@ local function toISO8601(utc_t, utc_dt)
     return stamp
 end
 
-LetsPug.toISO8601 = toISO8601
+LetsRaid.toISO8601 = toISO8601
 
 --- Returns true if automatic time calibration is enabled.
-function LetsPug:IsAutomaticTime()
+function LetsRaid:IsAutomaticTime()
     return self.db.realm.time.automatic
 end
 
 --- Toggles automatic time calibration on/off.
-function LetsPug:SetAutomaticTime(enabled)
+function LetsRaid:SetAutomaticTime(enabled)
     self.db.realm.time.automatic = not not enabled
 end
 
 --- Returns a guessed local to UTC (client) time difference in seconds.
 -- Negative for time zones west of Greenwich, positive otherwise.
-function LetsPug:GuessClientTimeOffset(loc_hh, loc_mm, utc_hh, utc_mm)
+function LetsRaid:GuessClientTimeOffset(loc_hh, loc_mm, utc_hh, utc_mm)
     local now_t = time()
 
     loc_hh = loc_hh or date("%H", now_t)
@@ -74,24 +74,24 @@ function LetsPug:GuessClientTimeOffset(loc_hh, loc_mm, utc_hh, utc_mm)
     return offset_dt
 end
 
-function LetsPug:GuessAndStoreClientTimeOffset(...)
+function LetsRaid:GuessAndStoreClientTimeOffset(...)
     local offset_dt = self:GuessClientTimeOffset(...)
     self:SetClientTimeOffset(offset_dt)
     return offset_dt
 end
 
 --- Returns local to UTC (client) time difference in seconds.
-function LetsPug:GetClientTimeOffset()
+function LetsRaid:GetClientTimeOffset()
     return self.db.realm.time.client_dt or self:GuessAndStoreClientTimeOffset()
 end
 
 --- Saves local to UTC (client) time difference in seconds.
-function LetsPug:SetClientTimeOffset(dt)
+function LetsRaid:SetClientTimeOffset(dt)
     self.db.realm.time.client_dt = tonumber(dt)
 end
 
 --- Returns time to server-side quest reset in seconds.
-function LetsPug:GetServerQuestResetOffset()
+function LetsRaid:GetServerQuestResetOffset()
     -- GetQuestResetTime() returns a value of `-time()` during first
     -- UPDATE_INSTANCE_INFO after restarting the game client
     local reset_dt = GetQuestResetTime()
@@ -105,7 +105,7 @@ end
 
 --- Returns time to server-side raid reset in seconds if player has an active lockout.
 -- It is assumed that all raid instance types reset at the same time.
-function LetsPug:GetServerRaidResetOffset()
+function LetsRaid:GetServerRaidResetOffset()
     for i = 1, GetNumSavedInstances() do
         local name, _, reset_dt = GetSavedInstanceInfo(i)
         reset_dt = reset_dt % DAY
@@ -120,7 +120,7 @@ function LetsPug:GetServerRaidResetOffset()
 end
 
 --- Returns UTC timestamp of next server-side quest reset.
-function LetsPug:GetServerNextQuestReset()
+function LetsRaid:GetServerNextQuestReset()
     local reset_dt = self:GetServerQuestResetOffset()
     if not reset_dt then
         self:Debug("GetServerNextQuestReset", nil)
@@ -134,7 +134,7 @@ end
 
 --- Returns UTC timestamp of next server-side raid reset.
 -- Only correct right after UPDATE_INSTANCE_INFO event.
-function LetsPug:GetServerNextRaidReset()
+function LetsRaid:GetServerNextRaidReset()
     local reset_dt = self:GetServerRaidResetOffset()
     if not reset_dt then
         self:Debug("GetServerNextRaidReset", nil)
@@ -148,7 +148,7 @@ end
 
 --- Returns number of seconds past UTC midnight at which lockouts reset.
 -- Infers the value from available lockouts & quest reset timer.
-function LetsPug:GuessServerResetOffset(use_quest)
+function LetsRaid:GuessServerResetOffset(use_quest)
     local raid_t = self:GetServerNextRaidReset()
     local quest_t = self:GetServerNextQuestReset()
 
@@ -162,14 +162,14 @@ function LetsPug:GuessServerResetOffset(use_quest)
     return reset_dt
 end
 
-function LetsPug:GuessAndStoreServerResetOffset(...)
+function LetsRaid:GuessAndStoreServerResetOffset(...)
     local reset_dt = self:GuessServerResetOffset(...)
     if reset_dt then self:SetServerResetOffset(reset_dt) end
     return reset_dt
 end
 
 --- Returns number of seconds past UTC midnight at which lockouts reset.
-function LetsPug:GetServerResetOffset()
+function LetsRaid:GetServerResetOffset()
     local reset_dt = self.db.realm.time.reset_dt
     if reset_dt then
         return reset_dt
@@ -177,12 +177,12 @@ function LetsPug:GetServerResetOffset()
 end
 
 --- Saves number of seconds past UTC midnight at which lockouts reset.
-function LetsPug:SetServerResetOffset(dt)
+function LetsRaid:SetServerResetOffset(dt)
     self.db.realm.time.reset_dt = (tonumber(dt) or 0) % DAY
 end
 
 --- Returns UTC timestamp of next server-side lockout reset, either raid or quest.
-function LetsPug:GetServerNextInstanceReset()
+function LetsRaid:GetServerNextInstanceReset()
     local now_t = time()
     local midnight_t = now_t - now_t % DAY
     local reset_dt = self:GetServerResetOffset()
@@ -202,7 +202,7 @@ end
 -- Daily quests reset timer is used only if there was no information collected yet,
 -- otherwise the existing time settings are kept intact. This can be overridden
 -- with `use_quest` flag to force a refresh when there's no raid lockout timers.
-function LetsPug:CalibrateTime(use_quest)
+function LetsRaid:CalibrateTime(use_quest)
     local client_dt = self:GuessAndStoreClientTimeOffset()
     self:GuessAndStoreServerResetOffset(use_quest)
 
@@ -213,7 +213,7 @@ function LetsPug:CalibrateTime(use_quest)
 end
 
 --- Throws an error if argument under test in not a readable date in YYYYMMDD format.
-function LetsPug:AssertReadable(arg)
+function LetsRaid:AssertReadable(arg)
     if type(arg) ~= "number" then
         error(("Arg should be a number, got %q"):format(type(arg)), 2)
     end
@@ -223,14 +223,14 @@ function LetsPug:AssertReadable(arg)
 end
 
 --- Returns a readable date in YYYYMMDD format for specified timestamp.
-function LetsPug:GetReadableDateFromTimestamp(stamp)
+function LetsRaid:GetReadableDateFromTimestamp(stamp)
     if not stamp then return nil end
     return tonumber(date("!%Y%m%d", stamp))
 end
 
 --- Returns a readable date/hour in YYYYMMDD.P format for specified timestamp.
 -- The P stands for fractional part of whole day, with minute resolution.
-function LetsPug:GetReadableDateHourFromTimestamp(stamp)
+function LetsRaid:GetReadableDateHourFromTimestamp(stamp)
     if not stamp then return nil end
     return tonumber(date("!%Y%m%d", stamp)) + (date("!%H", stamp) * HOUR + date("!%M", stamp) * MINUTE) / DAY
 end
@@ -239,7 +239,7 @@ do
     local temp_date = {}
 
     --- Returns a timestamp for specified YYYYMMDD readable date.
-    function LetsPug:GetTimestampFromReadableDate(readable)
+    function LetsRaid:GetTimestampFromReadableDate(readable)
         if not readable then return nil end
 
         temp_date.year  = tonumber(string.sub(readable, 0, 4))
@@ -255,7 +255,7 @@ do
 end
 
 --- Returns server daily reset timestamp for specified YYYYMMDD readable date.
-function LetsPug:GetResetTimestampFromReadableDate(readable, reset_dt)
+function LetsRaid:GetResetTimestampFromReadableDate(readable, reset_dt)
     local reset_tstmp = self:GetTimestampFromReadableDate(readable)
     if not reset_tstmp then return nil end
 
@@ -264,13 +264,13 @@ function LetsPug:GetResetTimestampFromReadableDate(readable, reset_dt)
 end
 
 --- Returns a short date in MMDD format for specified timestamp.
-function LetsPug:GetShortDateFromTimestamp(stamp)
+function LetsRaid:GetShortDateFromTimestamp(stamp)
     if not stamp then return nil end
     return date("!%m%d", stamp)
 end
 
 --- Returns a short date in MMDD format for specified YYYYMMDD readable date.
-function LetsPug:GetShortDateFromReadable(readable)
+function LetsRaid:GetShortDateFromReadable(readable)
     if not readable then return nil end
     return string.sub(readable, 5, 8)
 end
@@ -279,7 +279,7 @@ end
 -- Tries both current and neighbour year and returns the closer one.
 -- Neighbour year is either (1) previous year for `now` before Jun 01
 -- or (2) next year otherwise.
-function LetsPug:GetTimestampFromShort(short, now_readable)
+function LetsRaid:GetTimestampFromShort(short, now_readable)
     local now_readable = now_readable or self:GetReadableDateFromTimestamp(time())
     self:AssertReadable(now_readable)
 
@@ -298,12 +298,12 @@ end
 
 --- Returns a readable date in YYYYMMDD format for specified MMDD short date.
 -- Limitations of GetTimestampFromShort apply.
-function LetsPug:GetReadableDateFromShort(short, now_readable)
+function LetsRaid:GetReadableDateFromShort(short, now_readable)
     return self:GetReadableDateFromTimestamp(self:GetTimestampFromShort(short, now_readable))
 end
 
 do
-    local assertEqual = LetsPug.assertEqual
+    local assertEqual = LetsRaid.assertEqual
 
     assertEqual(toHHMM(), nil)
     assertEqual(toHHMM(0), "+0000")
@@ -321,61 +321,61 @@ do
     assertEqual(toISO8601(0, 7200), "1970-01-01T02:00:00+0200")
     assertEqual(toISO8601(3600, 7200), "1970-01-01T03:00:00+0200")
 
-    assertEqual(LetsPug:GuessClientTimeOffset(00, 00, 00, 00), 0 * HOUR) -- UTC+0 / GMT
-    assertEqual(LetsPug:GuessClientTimeOffset(23, 00, 23, 00), 0 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(00, 00, 00, 00), 0 * HOUR) -- UTC+0 / GMT
+    assertEqual(LetsRaid:GuessClientTimeOffset(23, 00, 23, 00), 0 * HOUR)
 
-    assertEqual(LetsPug:GuessClientTimeOffset(01, 00, 00, 00), 1 * HOUR) -- UTC+1 / CET
-    assertEqual(LetsPug:GuessClientTimeOffset(23, 00, 22, 00), 1 * HOUR)
-    assertEqual(LetsPug:GuessClientTimeOffset(00, 00, 23, 00), 1 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(01, 00, 00, 00), 1 * HOUR) -- UTC+1 / CET
+    assertEqual(LetsRaid:GuessClientTimeOffset(23, 00, 22, 00), 1 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(00, 00, 23, 00), 1 * HOUR)
 
-    assertEqual(LetsPug:GuessClientTimeOffset(13, 00, 00, 00), 13 * HOUR) -- UTC+13 / NZDT
-    assertEqual(LetsPug:GuessClientTimeOffset(23, 00, 10, 00), 13 * HOUR)
-    assertEqual(LetsPug:GuessClientTimeOffset(00, 00, 11, 00), 13 * HOUR)
-    assertEqual(LetsPug:GuessClientTimeOffset(12, 00, 23, 00), 13 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(13, 00, 00, 00), 13 * HOUR) -- UTC+13 / NZDT
+    assertEqual(LetsRaid:GuessClientTimeOffset(23, 00, 10, 00), 13 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(00, 00, 11, 00), 13 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(12, 00, 23, 00), 13 * HOUR)
 
-    assertEqual(LetsPug:GuessClientTimeOffset(00, 00, 09, 00), -9 * HOUR) -- UTC-9 / AKST
-    assertEqual(LetsPug:GuessClientTimeOffset(14, 00, 23, 00), -9 * HOUR)
-    assertEqual(LetsPug:GuessClientTimeOffset(15, 00, 00, 00), -9 * HOUR)
-    assertEqual(LetsPug:GuessClientTimeOffset(23, 00, 08, 00), -9 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(00, 00, 09, 00), -9 * HOUR) -- UTC-9 / AKST
+    assertEqual(LetsRaid:GuessClientTimeOffset(14, 00, 23, 00), -9 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(15, 00, 00, 00), -9 * HOUR)
+    assertEqual(LetsRaid:GuessClientTimeOffset(23, 00, 08, 00), -9 * HOUR)
 
-    assertEqual(LetsPug:GetReadableDateFromTimestamp(), nil)
-    assertEqual(LetsPug:GetReadableDateFromTimestamp(0), 19700101)
-    assertEqual(LetsPug:GetReadableDateFromTimestamp(DAY), 19700102)
-    assertEqual(LetsPug:GetReadableDateFromTimestamp(DAY-1), 19700101)
+    assertEqual(LetsRaid:GetReadableDateFromTimestamp(), nil)
+    assertEqual(LetsRaid:GetReadableDateFromTimestamp(0), 19700101)
+    assertEqual(LetsRaid:GetReadableDateFromTimestamp(DAY), 19700102)
+    assertEqual(LetsRaid:GetReadableDateFromTimestamp(DAY-1), 19700101)
 
-    assertEqual(LetsPug:GetReadableDateHourFromTimestamp(), nil)
-    assertEqual(LetsPug:GetReadableDateHourFromTimestamp(0), 19700101)
-    assertEqual(LetsPug:GetReadableDateHourFromTimestamp(12 * HOUR), 19700101.5)
-    assertEqual(LetsPug:GetReadableDateHourFromTimestamp(DAY), 19700102)
+    assertEqual(LetsRaid:GetReadableDateHourFromTimestamp(), nil)
+    assertEqual(LetsRaid:GetReadableDateHourFromTimestamp(0), 19700101)
+    assertEqual(LetsRaid:GetReadableDateHourFromTimestamp(12 * HOUR), 19700101.5)
+    assertEqual(LetsRaid:GetReadableDateHourFromTimestamp(DAY), 19700102)
 
-    assertEqual(LetsPug:GetShortDateFromTimestamp(), nil)
-    assertEqual(LetsPug:GetShortDateFromTimestamp(0), "0101")
-    assertEqual(LetsPug:GetShortDateFromTimestamp(DAY), "0102")
-    assertEqual(LetsPug:GetShortDateFromTimestamp(DAY-1), "0101")
+    assertEqual(LetsRaid:GetShortDateFromTimestamp(), nil)
+    assertEqual(LetsRaid:GetShortDateFromTimestamp(0), "0101")
+    assertEqual(LetsRaid:GetShortDateFromTimestamp(DAY), "0102")
+    assertEqual(LetsRaid:GetShortDateFromTimestamp(DAY-1), "0101")
 
-    assertEqual(LetsPug:GetShortDateFromReadable(), nil)
-    assertEqual(LetsPug:GetShortDateFromReadable(19700101), "0101")
-    assertEqual(LetsPug:GetShortDateFromReadable(19700102), "0102")
+    assertEqual(LetsRaid:GetShortDateFromReadable(), nil)
+    assertEqual(LetsRaid:GetShortDateFromReadable(19700101), "0101")
+    assertEqual(LetsRaid:GetShortDateFromReadable(19700102), "0102")
 
-    assertEqual(LetsPug:GetTimestampFromReadableDate(), nil)
-    assertEqual(LetsPug:GetTimestampFromReadableDate(19700101), 0)
-    assertEqual(LetsPug:GetTimestampFromReadableDate("19700101"), 0)
-    assertEqual(LetsPug:GetTimestampFromReadableDate(19700102), DAY)
-    assertEqual(LetsPug:GetTimestampFromReadableDate("19700102"), DAY)
+    assertEqual(LetsRaid:GetTimestampFromReadableDate(), nil)
+    assertEqual(LetsRaid:GetTimestampFromReadableDate(19700101), 0)
+    assertEqual(LetsRaid:GetTimestampFromReadableDate("19700101"), 0)
+    assertEqual(LetsRaid:GetTimestampFromReadableDate(19700102), DAY)
+    assertEqual(LetsRaid:GetTimestampFromReadableDate("19700102"), DAY)
 
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190722), 20190722)
-    assertEqual(LetsPug:GetReadableDateFromShort("722",  20190722), 20190722)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0722", 20190722), 20190722)
+    assertEqual(LetsRaid:GetReadableDateFromShort("722",  20190722), 20190722)
 
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190715), 20190122)
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190722), 20190122)
-    assertEqual(LetsPug:GetReadableDateFromShort("0122", 20190729), 20200122)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0122", 20190715), 20190122)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0122", 20190722), 20190122)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0122", 20190729), 20200122)
 
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190115), 20180722)
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190122), 20190722)
-    assertEqual(LetsPug:GetReadableDateFromShort("0722", 20190129), 20190722)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0722", 20190115), 20180722)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0722", 20190122), 20190722)
+    assertEqual(LetsRaid:GetReadableDateFromShort("0722", 20190129), 20190722)
 
-    assertEqual(LetsPug:GetResetTimestampFromReadableDate(19700101, 10 * HOUR), 0 * DAY + 10 * HOUR)
-    assertEqual(LetsPug:GetResetTimestampFromReadableDate(19700102, 10 * HOUR), 1 * DAY + 10 * HOUR)
+    assertEqual(LetsRaid:GetResetTimestampFromReadableDate(19700101, 10 * HOUR), 0 * DAY + 10 * HOUR)
+    assertEqual(LetsRaid:GetResetTimestampFromReadableDate(19700102, 10 * HOUR), 1 * DAY + 10 * HOUR)
 
     local now_t = time()
     local hour = (now_t % DAY - now_t % HOUR) / HOUR

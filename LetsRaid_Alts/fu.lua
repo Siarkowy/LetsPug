@@ -1,16 +1,16 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-local LetsPug = LetsPug
-local RaidWatch = RaidWatch
+local LetsRaid = LetsRaid
+local LetsRaid_Alts = LetsRaid_Alts
 
 local AceConfigDialog30 = LibStub("AceConfigDialog-3.0")
 local tablet = LibStub("Tablet-2.0")
-local wipe = LetsPug.wipe
+local wipe = LetsRaid.wipe
 
-function RaidWatch:OnFuInitialize()
+function LetsRaid_Alts:OnFuInitialize()
     self:SetFuBarOption("configType", "Custom")
     self:SetFuBarOption("tooltipType", "Tablet-2.0")
     self:SetFuBarOption("defaultPosition", "RIGHT")
@@ -18,19 +18,19 @@ function RaidWatch:OnFuInitialize()
     self:SetFuBarOption("iconPath", [[Interface\Icons\Spell_Nature_Invisibilty]]) -- [[Interface\ICONS\INV_Misc_GroupNeedMore]]
 end
 
-function RaidWatch:OnFuBarMouseDown(btn)
-    AceConfigDialog30:Open(LetsPug.name)
+function LetsRaid_Alts:OnFuBarMouseDown(btn)
+    AceConfigDialog30:Open(LetsRaid.name)
 
     if not self:HasAlts() then
-        LetsPug:SwitchOptionsToAlts()
+        LetsRaid:SwitchOptionsToAlts()
         return
     end
 
-    LetsPug:SwitchOptionsToActiveTalentSpec()
+    LetsRaid:SwitchOptionsToActiveTalentSpec()
 end
 
-function RaidWatch:OnUpdateFuBarText()
-    local player = LetsPug.player
+function LetsRaid_Alts:OnUpdateFuBarText()
+    local player = LetsRaid.player
     local exp_save_info = self:GetPlayerExpandedSaveInfo(player)
     local colored_player = self:GetClassColoredPlayerName(player)
     local text = format("%s - %s", colored_player, exp_save_info)
@@ -38,7 +38,7 @@ function RaidWatch:OnUpdateFuBarText()
 end
 
 local line = {}
-function RaidWatch:OnUpdateFuBarTooltip()
+function LetsRaid_Alts:OnUpdateFuBarTooltip()
     if not self:HasAlts() then
         return tablet:SetHint("No alts are shown. Click to add at least one.")
     end
@@ -69,7 +69,7 @@ function RaidWatch:OnUpdateFuBarTooltip()
     self:ShowTierInfo(cat, "n", "o")
 end
 
-function RaidWatch:ShowTierInfo(cat, ...)
+function LetsRaid_Alts:ShowTierInfo(cat, ...)
     local now = time()
     local available_color, focused_color, saved_color = self:GetSaveColors()
 
@@ -78,11 +78,11 @@ function RaidWatch:ShowTierInfo(cat, ...)
 
         wipe(line)
         tinsert(line, "text")
-        tinsert(line, LetsPug:GetInstanceNameForKey(inst_key))
+        tinsert(line, LetsRaid:GetInstanceNameForKey(inst_key))
         for i, player in ipairs(self.alts) do
-            local reset_readable = LetsPug:GetPlayerInstanceResetReadable(player, inst_key)
-            local reset_time = LetsPug:GetResetTimestampFromReadableDate(reset_readable)
-            local is_focused = LetsPug:GetPlayerInstanceFocus(player, false, inst_key, true)
+            local reset_readable = LetsRaid:GetPlayerInstanceResetReadable(player, inst_key)
+            local reset_time = LetsRaid:GetResetTimestampFromReadableDate(reset_readable)
+            local is_focused = LetsRaid:GetPlayerInstanceFocus(player, false, inst_key, true)
             local is_saved = reset_time and reset_time > now
     
             local color = is_saved and saved_color

@@ -1,4 +1,4 @@
-# Let's Pug Changelog
+# Let's Raid Changelog
 
 ## 0.4.1 (2020-01-02)
 

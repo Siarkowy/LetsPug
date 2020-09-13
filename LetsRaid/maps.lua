@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
@@ -31,6 +31,6 @@ local instance_keys = locale == "enUS" and {
 or {
 }
 
-function LetsPug:GetInstanceKeyForMap(name)
+function LetsRaid:GetInstanceKeyForMap(name)
     return instance_keys[name]
 end

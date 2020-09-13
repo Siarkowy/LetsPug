@@ -1,9 +1,0 @@
-## Interface: 20400
-## Title: LetsPug [|cffeda55fRaidWatch|r]
-## Notes: Track instance saves across your alts & defined characters. Usage: /lprw
-## Author: Siarkowy
-## Version: 0.4.0
-## Dependencies: LetsPug
-
-core.lua
-fu.lua

@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
-function LetsPug:RefreshSavedInstances()
+function LetsRaid:RefreshSavedInstances()
     for i = 1, GetNumSavedInstances() do
         local name, id, ttl = GetSavedInstanceInfo(i)
         local expire_timestamp = time() + ttl
@@ -12,14 +12,14 @@ function LetsPug:RefreshSavedInstances()
     end
 end
 
-function LetsPug:RegisterSavedInstance(name, expire_readable)
+function LetsRaid:RegisterSavedInstance(name, expire_readable)
     local instance_key = self:GetInstanceKeyForMap(name)
     if instance_key then
         self.saves[instance_key] = expire_readable
     end
 end
 
-function LetsPug:RegisterPlayerSaveInfo(player, save_info)
+function LetsRaid:RegisterPlayerSaveInfo(player, save_info)
     self.db.realm.saves[player] = save_info
 
     local instances = self.db.realm.instances
@@ -28,11 +28,11 @@ function LetsPug:RegisterPlayerSaveInfo(player, save_info)
     end
 end
 
-function LetsPug:GetPlayerSaveInfo(player)
+function LetsRaid:GetPlayerSaveInfo(player)
     return self.db.realm.saves[player]
 end
 
-function LetsPug:GetPlayerInstanceResetReadable(player, instance_key)
+function LetsRaid:GetPlayerInstanceResetReadable(player, instance_key)
     local instance_info = assert(self.db.realm.instances[instance_key], "Wrong instance key")
     local reset_readable = instance_info[player]
     return reset_readable

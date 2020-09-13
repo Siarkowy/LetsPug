@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Let's Pug (c) 2019 by Siarkowy <http://siarkowy.net/letspug>
+-- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
 -- Released under the terms of BSD 2.0 license.
 --------------------------------------------------------------------------------
 
@@ -7,7 +7,7 @@ local gsub = string.gsub
 local join = string.join
 local tinsert = table.insert
 
-local wipe = LetsPug.wipe
+local wipe = LetsRaid.wipe
 
 local function less_than(a, b)
     return a < b
@@ -32,7 +32,7 @@ end
 
 do
     local result = {}
-    function LetsPug:SortedByDate(...)
+    function LetsRaid:SortedByDate(...)
         wipe(result)
         for i = 1, select('#', ...) do
             table.insert(result, (select(i, ...)))
@@ -48,7 +48,7 @@ end
 
 local DAY = 86400
 local save_pairs = {}
-function LetsPug:EncodeSaveInfo(saves, since)
+function LetsRaid:EncodeSaveInfo(saves, since)
     local hr_frac = since and 0 or self:GetServerResetOffset() / DAY
 
     saves = saves or self.saves or {}
@@ -82,7 +82,7 @@ function LetsPug:EncodeSaveInfo(saves, since)
 end
 
 do
-    local assertEqual = LetsPug.assertEqual
+    local assertEqual = LetsRaid.assertEqual
 
     local X1231 = 20181231
     local Y0101 = 20190101
@@ -92,39 +92,39 @@ do
     local Y0201 = 20190201
 
     -- date sorting
-    assertEqual(string.join("", LetsPug:SortedByDate("a02", "b03", "c01")), "c01a02b03")
-    assertEqual(string.join("", LetsPug:SortedByDate("a01", "b01", "c01")), "a01b01c01")
-    assertEqual(string.join("", LetsPug:SortedByDate("c01", "b01", "a01")), "c01b01a01")
+    assertEqual(string.join("", LetsRaid:SortedByDate("a02", "b03", "c01")), "c01a02b03")
+    assertEqual(string.join("", LetsRaid:SortedByDate("a01", "b01", "c01")), "a01b01c01")
+    assertEqual(string.join("", LetsRaid:SortedByDate("c01", "b01", "a01")), "c01b01a01")
 
     -- no saves
-    assertEqual(LetsPug:EncodeSaveInfo({}, X1231), "A1231")
+    assertEqual(LetsRaid:EncodeSaveInfo({}, X1231), "A1231")
 
     -- date grouping
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101}, X1231), "k0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0101}, X1231), "ks0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0101, h = Y0101}, X1231), "ksh0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101}, X1231), "k0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0101}, X1231), "ks0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0101, h = Y0101}, X1231), "ksh0101")
 
     -- date filtering
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101}, X1231), "k0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0102}, Y0101), "s0102")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0102}, X1231), "k0101s02")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101}, X1231), "k0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0102}, Y0101), "s0102")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0102}, X1231), "k0101s02")
 
     -- month shortening
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0102}, X1231), "k0101s02")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0102, s = Y0101}, X1231), "s0101k02")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0131, s = Y0201}, X1231), "k0131s01")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0201, s = Y0131}, X1231), "s0131k01")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, s = Y0102, h = Y0103}, X1231), "k0101s02h03")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0102}, X1231), "k0101s02")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0102, s = Y0101}, X1231), "s0101k02")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0131, s = Y0201}, X1231), "k0131s01")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0201, s = Y0131}, X1231), "s0131k01")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, s = Y0102, h = Y0103}, X1231), "k0101s02h03")
 
     -- different reset for all instances
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101+0, g = Y0101+1, m = Y0101+2, s = Y0101+3, t = Y0101+4, z = Y0101+5, h = Y0101+6, b = Y0101+7, p = Y0101+8}, X1231), "k0101g02m03s04t05z06h07b08p09")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101+0, g = Y0101+1, m = Y0101+2, s = Y0101+3, t = Y0101+4, z = Y0101+5, h = Y0101+6, b = Y0101+7, p = Y0101+8}, X1231), "k0101g02m03s04t05z06h07b08p09")
 
     -- all but one reset equal
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0102}, X1231), "kgmstzhb0101p02")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, g = Y0101, m = Y0101, s = Y0101, t = Y0101, z = Y0101, h = Y0101, b = Y0101, p = Y0102}, X1231), "kgmstzhb0101p02")
 
     -- unknown instances
-    assertEqual(LetsPug:EncodeSaveInfo({x = Y0101}, X1231), "A1231")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, x = Y0101}, X1231), "k0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0101, x = Y0102}, X1231), "k0101")
-    assertEqual(LetsPug:EncodeSaveInfo({k = Y0102, x = Y0101}, X1231), "k0102")
+    assertEqual(LetsRaid:EncodeSaveInfo({x = Y0101}, X1231), "A1231")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, x = Y0101}, X1231), "k0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0101, x = Y0102}, X1231), "k0101")
+    assertEqual(LetsRaid:EncodeSaveInfo({k = Y0102, x = Y0101}, X1231), "k0102")
 end

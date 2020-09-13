@@ -1,0 +1,9 @@
+## Interface: 20400
+## Title: LetsRaid [|cffeda55fAlts|r]
+## Notes: Track instance saves across your alts & defined characters.
+## Author: Siarkowy
+## Version: 0.4.0
+## Dependencies: LetsRaid
+
+core.lua
+fu.lua
