@@ -49,7 +49,7 @@ end
 local DAY = 86400
 local save_pairs = {}
 function LetsRaid:EncodeSaveInfo(saves, since)
-    local hr_frac = since and 0 or self:GetServerResetOffset() / DAY
+    local hr_frac = since and 0 or (self:GetServerResetOffset() or 0) / DAY
 
     saves = saves or self.saves or {}
     since = since or self:GetReadableDateHourFromTimestamp(time())
