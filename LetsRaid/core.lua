@@ -108,15 +108,15 @@ function LetsRaid:OnEnable()
     self:RegisterEvent("CHARACTER_POINTS_CHANGED")
 
     ShowFriends()
-    self:ScheduleRepeatingTimer(ShowFriends, 30)
+    self:ScheduleRepeatingTimer(ShowFriends, 37)
 
     if IsInGuild() then
         GuildRoster()
-        self:ScheduleRepeatingTimer(GuildRoster, 30)
+        self:ScheduleRepeatingTimer(GuildRoster, 29)
     end
 
     -- RequestRaidInfo()
-    self:ScheduleRepeatingTimer(RequestRaidInfo, 60)
+    self:ScheduleRepeatingTimer(RequestRaidInfo, 67)
 
     self:ScheduleInstanceCleanup()
 end
