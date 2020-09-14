@@ -21,6 +21,7 @@ local function getInstanceToggle(order, spec_id, inst_key)
     local inst_name = LetsRaid:GetInstanceNameForKey(inst_key)
     return {
         name = inst_name,
+        desc = format("Focus %s", inst_name),
         type = "toggle",
         get = getSlashInstanceFocus(spec_id, inst_key),
         set = setSlashInstanceFocus(spec_id, inst_key),
@@ -36,7 +37,7 @@ end
 local function getRoleToggle(order, spec_id, role_id, role_name)
     return {
         name = getRoleLabel(role_id:lower(), role_name),
-        desc = role_name,
+        desc = format("Set Role for this talent tree: %s", role_name),
         type = "toggle",
         get = function(info)
             return LetsRaid:GetPlayerRole(LetsRaid.player, spec_id) == role_id
@@ -50,6 +51,19 @@ end
 
 local function getTalentSpecConfig(spec_id)
     return {
+        hint1 = {
+            name = "Hint",
+            type = "header",
+            cmdHidden = true,
+            order = 200
+        },
+        hint2 = {
+            name = "Select|cffffd200 role & instances of interest|r for this talent specialization. Choose at most|cffffd200 3 instances your gear level.|r Respective specialization settings will be activated automatically|cffffd200 on talent respec.|r",
+            type = "description",
+            cmdHidden = true,
+            order = 205,
+        },
+
         role = {
             name = "Role",
             type = "header",
