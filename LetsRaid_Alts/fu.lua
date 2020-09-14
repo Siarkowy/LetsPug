@@ -31,9 +31,10 @@ end
 
 function LetsRaid_Alts:OnUpdateFuBarText()
     local player = LetsRaid.player
+    local role_info = LetsRaid:GetPlayerRoleInfo()
     local exp_save_info = self:GetPlayerExpandedSaveInfo(player)
     local colored_player = self:GetClassColoredPlayerName(player)
-    local text = format("%s - %s", colored_player, exp_save_info)
+    local text = format("%s %s - %s", colored_player, role_info, exp_save_info)
     self:SetFuBarText(text)
 end
 
