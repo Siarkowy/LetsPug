@@ -3,6 +3,7 @@
 ## Notes: Track instance saves across your alts & defined characters.
 ## Author: Siarkowy
 ## Version: 0.4.0
+## X-License: BSD 3-Clause "New"
 ## Dependencies: LetsRaid
 
 core.lua

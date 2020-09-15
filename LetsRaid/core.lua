@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Let's Raid (c) 2019 by Siarkowy <http://siarkowy.net/letsraid>
--- Released under the terms of BSD 2.0 license.
+-- Released under the terms of BSD 3-Clause "New" license (see LICENSE file).
 --------------------------------------------------------------------------------
 
 LetsRaid = assert(LibStub("AceAddon-3.0"):NewAddon("LetsRaid", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0"))
