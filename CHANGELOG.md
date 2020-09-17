@@ -1,5 +1,43 @@
 # Let's Raid Changelog
 
+## v0.5.0 (2020-09-17)
+
+- Changed: Say Hi to Let's Raid! I decided to rename the addon in belief that
+  a more general name fits its purpose better. Let's Raid is not only intended
+  to assist in organizing pug runs, but probably even more so to ease managing
+  of guild activities. And this is a big release after long time in the works!
+- Improved: Time handling was overhauled for lockouts to be precise to a second.
+- New: Automatic time calibration was added & enabled by default. It relies on
+  available raid lockouts, and should fix previously observed time drift issues.
+- New: Naxxramas & Onyxia's Lair are now supported instances for tracking.
+- New: Instance focus is now core functionality of the addon, and was extended
+  to a notion of raid specializations: for each talent tree, you can set its
+  intended raid role (Tank/Healer/DPS) and instances of interest separately.
+  This comes handy when you gear different specs of your character but they
+  still aren't the same level of gear, e.g. your DPS spec is Sunwell ready but
+  you still need gear from Black Temple for your healer spec to progress.
+- New: Whenever you change your talent points, respective specialization
+  settings will be activated. Additionally, if it's the first time you are
+  seen in the given specialization, a default raid role will be assigned.
+- Changed: It is now only possible to manage specialization settings for
+  currently logged in character. This is in order to simplify related logic.
+- New: Account & guild sync now propagates information on active specialization.
+  The latter relies on being allowed to modify player notes by the guild master.
+- New: It is now possible to disable writing lockout changes to player note when
+  in guild. Useful when you don't want to mangle notes when sharing an account.
+- New: Alt overview opens settings to active talent specialization when clicked.
+- New: Also, the overview opens alt management options if no alts are shown yet.
+- New: You can now find alts in the guild if it uses QDKP-compatible note system.
+- Fixed: Alt overview now automatically refreshes when alts are added/hidden.
+- Changed: A fresh start now defaults to a realm profile instead of account one.
+- Fixed: It is now possible to properly manage profiles from within the settings.
+- Changed: Settings panes were simplified and several hint texts were added.
+- Improved: Several parts of code were made easily extendable to new instances.
+- Changed: When writing lockouts into guild notes, instances are not grouped
+  into same tier anymore. They should be more readable this way. Also, addresses
+  the possibility of having different lockout durations in the same raid tier.
+  However, the change is backwards compatible with existing player notes.
+
 ## v0.4.1 (2020-01-02)
 
 - Fixed reported reset times for TBC 5-man server being 1 hour off by default.

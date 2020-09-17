@@ -1,8 +1,8 @@
 ## Interface: 20400
 ## Title: LetsRaid
-## Notes: Organize raids with ease. Usage: /lr
+## Notes: Never miss a raid. Usage: /lr
 ## Author: Siarkowy
-## Version: 0.4.1
+## Version: 0.5.0
 ## X-License: BSD 3-Clause "New"
 ## OptionalDeps: Ace2, Ace3
 ## SavedVariables: LetsRaidDB

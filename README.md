@@ -32,6 +32,8 @@ Never miss a raid. Usage: /lr. Supports patch 2.4.3.
   raids will become an even easier process. Only log your desired character
   and access a bigger pool of raiders!
 
+See [changelog](CHANGELOG.md) for a detailed description.
+
 
 ## Installation
 
