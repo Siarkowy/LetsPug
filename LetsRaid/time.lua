@@ -237,18 +237,20 @@ end
 
 do
     local temp_date = {}
+    local dt = LetsRaid:GuessClientTimeOffset()
+    local t = date("*t")
 
     --- Returns a timestamp for specified YYYYMMDD readable date.
     function LetsRaid:GetTimestampFromReadableDate(readable)
         if not readable then return nil end
 
-        temp_date.year  = tonumber(string.sub(readable, 0, 4))
+        temp_date.year  = tonumber(string.sub(readable, 1, 4))
         temp_date.month = tonumber(string.sub(readable, 5, 6))
         temp_date.day   = tonumber(string.sub(readable, 7, 8))
-        temp_date.hour  = date("%H", 0)
+        temp_date.hour  = dt / HOUR
         temp_date.min   = 0
         temp_date.sec   = 0
-        temp_date.isdst = false
+        temp_date.isdst = t.isdst
 
         return time(temp_date)
     end
