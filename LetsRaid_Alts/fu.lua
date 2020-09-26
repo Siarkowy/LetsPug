@@ -10,6 +10,8 @@ local AceConfigDialog30 = LibStub("AceConfigDialog-3.0")
 local tablet = LibStub("Tablet-2.0")
 local wipe = LetsRaid.wipe
 
+local LETSRAID_ALTS_HINT = "Hint: Click for Raid Spec Settings"
+
 function LetsRaid_Alts:OnFuInitialize()
     self:SetFuBarOption("configType", "Custom")
     self:SetFuBarOption("tooltipType", "Tablet-2.0")
@@ -69,6 +71,10 @@ function LetsRaid_Alts:OnUpdateFuBarTooltip()
 
     cat:AddLine("text", "|cffccccccOther|r")
     self:ShowTierInfo(cat, "n", "o")
+
+    cat = tablet:AddCategory("hideBlankLine", true)
+    cat:AddLine()
+    cat:AddLine("text", LETSRAID_ALTS_HINT, "textR", 0, "textG", 1, "textB", 0, "wrap", true, "justify", "CENTER")
 end
 
 function LetsRaid_Alts:ShowTierInfo(cat, ...)
