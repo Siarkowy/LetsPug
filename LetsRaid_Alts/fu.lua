@@ -13,6 +13,7 @@ local wipe = LetsRaid.wipe
 function LetsRaid_Alts:OnFuInitialize()
     self:SetFuBarOption("configType", "Custom")
     self:SetFuBarOption("tooltipType", "Tablet-2.0")
+    self:SetFuBarOption("clickableTooltip", true)
     self:SetFuBarOption("defaultPosition", "RIGHT")
     self:SetFuBarOption("defaultMinimapPosition", 235)
     self:SetFuBarOption("iconPath", [[Interface\Icons\Spell_Nature_Invisibilty]]) -- [[Interface\ICONS\INV_Misc_GroupNeedMore]]
