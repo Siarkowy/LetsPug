@@ -49,6 +49,10 @@ local function getRoleToggle(order, spec_id, role_id, role_name)
     }
 end
 
+local LETSRAID_SPEC_HINT = [[Select|cff00ff00 role & instances of interest|r for this talent specialization. Choose at most|cff00ff00 3 raids your gear level.|r
+
+Respective specialization settings will be activated automatically|cff00ff00 after you respec talents.|r]]
+
 local function getTalentSpecConfig(spec_id)
     return {
         hint1 = {
@@ -58,7 +62,7 @@ local function getTalentSpecConfig(spec_id)
             order = 200
         },
         hint2 = {
-            name = "Select|cffffd200 role & instances of interest|r for this talent specialization. Choose at most|cffffd200 3 instances your gear level.|r Respective specialization settings will be activated automatically|cffffd200 on talent respec.|r",
+            name = LETSRAID_SPEC_HINT,
             type = "description",
             cmdHidden = true,
             order = 205,
