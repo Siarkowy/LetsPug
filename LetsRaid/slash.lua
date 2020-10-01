@@ -15,6 +15,10 @@ function LetsRaid:GetAltValuesSlash(info)
     return alts
 end
 
+local LETSRAID_ALTS_HINT = [[|cff00ff00IMPORTANT: Lockout synchronization works ONLY IF your alts either (1) share the SAME ACCOUNT or (2) are part of the SAME GUILD and PLAYER NOTE EDITING IS ALLOWED. Otherwise, lockout data cannot be synced.|r]]
+
+local LETSRAID_CANNOT_EDIT_PLAYER_NOTE_WARN = [[|cffffaa50WARNING: Current character CANNOT edit the player note. Only same account synchronization possible.]]
+
 LetsRaid.slash = {
     handler = LetsRaid,
     type = "group",
@@ -195,7 +199,7 @@ LetsRaid.slash = {
                         local alts = LetsRaid:FindPlayerAlts(LetsRaid.player)
                         local count = 0
                         for _, _ in pairs(alts) do count = count + 1 end
-                        return format("Mark %d |4guild character:guild characters; as alts. Works best with QDKP-style system, where alt's officer note contains {Main} info", count)
+                        return format("Mark %d |4guild character:guild characters; as alts. Works best with QDKP-style note system, where alt is marked in the officer note with '{main}' info.", count)
                     end,
                     type = "execute",
                     func = function(info)
@@ -208,6 +212,17 @@ LetsRaid.slash = {
                     width = "full",
                     order = 10
                 },
+                sync = {
+                    name = LETSRAID_ALTS_HINT,
+                    type = "description",
+                    order = 50
+                },
+                playernote = {
+                    name = LETSRAID_CANNOT_EDIT_PLAYER_NOTE_WARN,
+                    hidden = function() return not IsInGuild() or LetsRaid:IsEditPublicNoteAvailable() end,
+                    type = "description",
+                    order = 55
+                }
             }
         },
     }
