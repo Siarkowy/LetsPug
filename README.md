@@ -35,14 +35,35 @@ Never miss a raid. Usage: /lr. Supports patch 2.4.3.
 See [changelog](CHANGELOG.md) for a detailed description.
 
 
+## Note on Synchronization
+
+> This section describes the technical limitations of LetsRaid synchronization.
+
+For lockout synchronization to work, one of the following cases must be met:
+
+- **Your alts share the same account.** In this most basic scenario, alts will
+  be able to see each other's instance lockouts & raid specialization settings.
+  However, it is not always possible/desirable to keep several alts in the same
+  account. There is a possibility to combine several accounts into a single one
+  as far as the game client is concerned (by linking their `SavedVariables` dirs
+  on disk with junctions or symbolic links). Please refer to the [external guide](http://web.archive.org/web/20201001161548/https://www.wowhead.com/guide=934/two-game-accounts-one-folder-now-with-mac).
+- **Your alts are part of the same guild with ability to modify public notes.**
+  In this scenario, you will be able to see instance lockouts between different
+  accounts (without the need of linking them). LetsRaid uses public notes to
+  store lockouts & raid specialization information, in a manner similar to QDKP
+  keeping DKP information in officer notes. This is required so that you don't
+  need to log multiple characters at the same time for synchronization to work.
+  If you are not able to modify your player note, you either need to kindly ask
+  your GM to enable it, or combine your accounts as hinted in previous scenario.
+
 ## Installation
+
+> **IMPORTANT:** Please review the [note on synchronization](#note-on-synchronization) above.
 
 - Find the latest [release](https://github.com/SiarkowyMods/LetsRaid/releases),
   download ZIP file from assets below & open the archive.
 - Extract all folders from `LetsRaid-<version>\` into your `Interface\AddOns\`.
 - Restart WoW client & confirm the addon(s) are shown in character login screen.
-
-> Make sure your guild allows writing to player notes to sync lockouts between accounts.
 
 
 ## Contributing
