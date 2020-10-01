@@ -3,6 +3,7 @@
 ## Notes: Track instance saves across your alts & defined characters.
 ## Author: Siarkowy
 ## Version: 0.5.0
+## X-Website: https://github.com/SiarkowyMods/LetsRaid
 ## X-License: BSD 3-Clause "New"
 ## Dependencies: LetsRaid
 
