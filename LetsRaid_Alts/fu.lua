@@ -10,7 +10,7 @@ local AceConfigDialog30 = LibStub("AceConfigDialog-3.0")
 local tablet = LibStub("Tablet-2.0")
 local wipe = LetsRaid.wipe
 
-local LETSRAID_ALTS_HINT = "Hint: Click for Raid Spec Settings"
+local LETSRAID_ALTS_HINT = "Hint: Lockouts rounded to full units. |cffeda55fClick|r to open raid spec settings."
 
 function LetsRaid_Alts:OnFuInitialize()
     self:SetFuBarOption("configType", "Custom")
