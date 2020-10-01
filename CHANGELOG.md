@@ -1,5 +1,14 @@
 # Let's Raid Changelog
 
+## v0.5.1 (2020-10-01)
+
+- Fixed: Lockout durations in alt overview will no longer glitch for American users.
+- Fixed: Alt overview tooltip can now be entered with mouse cursor.
+- Improved: Several hint texts added/adjusted for better user experience.
+- New: Alt management contains a note on the limitations of synchronization.
+  Additionally, a warning is shown if the current alt cannot write to public
+  note while in a guild. The README file describes [synchronization limits](https://github.com/SiarkowyMods/LetsRaid#note-on-synchronization) as well.
+
 ## v0.5.0 (2020-09-17)
 
 - Changed: Say Hi to Let's Raid! I decided to rename the addon in belief that
