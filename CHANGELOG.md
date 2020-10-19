@@ -1,5 +1,9 @@
 # Let's Raid Changelog
 
+## v0.5.2 (2020-10-20)
+
+- Fixed: Raid lockouts will now be properly recognized in non-English clients.
+
 ## v0.5.1 (2020-10-01)
 
 - Fixed: Lockout durations in alt overview will no longer glitch for American users.
