@@ -48,6 +48,7 @@ if locale == "deDE" then instance_keys = {
     ["Gruuls Unterschlupf"] = "g",
     ["Zul'Aman"] = "z",
     ["Der Sonnenbrunnen"] = "p",
+    ["Tempel von Ahn'Qiraj"] = "j",
 } end
 
 if locale == "esES" then instance_keys = {
