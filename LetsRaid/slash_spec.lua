@@ -116,6 +116,7 @@ local function getTalentSpecConfig(spec_id)
         },
         naxx = getInstanceToggle(71, spec_id, "n"),
         ony  = getInstanceToggle(72, spec_id, "o"),
+        aq40 = getInstanceToggle(75, spec_id, "j"),
     }
 end
 

@@ -3,6 +3,8 @@
 -- Released under the terms of BSD 3-Clause "New" license (see LICENSE file).
 --------------------------------------------------------------------------------
 
+LetsRaid.supportedInstanceKeys = "kgmstzhbpnoj"
+
 local locale = GetLocale()
 
 -- /run for i=1,GetNumSavedInstances() do print(GetSavedInstanceInfo(i)) end
@@ -27,6 +29,7 @@ local instance_keys = {
     -- Vanilla
     ["Naxxramas"] = "n",
     ["Onyxia's Lair"] = "o",
+    ["Ahn'Qiraj Temple"] = "j",
 }
 
 function LetsRaid:GetInstanceKeyForMap(name)

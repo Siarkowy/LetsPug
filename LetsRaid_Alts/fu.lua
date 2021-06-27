@@ -70,7 +70,7 @@ function LetsRaid_Alts:OnUpdateFuBarTooltip()
     cat:AddLine()
 
     cat:AddLine("text", "|cffccccccOther|r")
-    self:ShowTierInfo(cat, "n", "o")
+    self:ShowTierInfo(cat, "n", "o", "j")
 
     cat = tablet:AddCategory("hideBlankLine", true)
     cat:AddLine()

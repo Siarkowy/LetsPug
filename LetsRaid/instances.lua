@@ -3,8 +3,6 @@
 -- Released under the terms of BSD 3-Clause "New" license (see LICENSE file).
 --------------------------------------------------------------------------------
 
-LetsRaid.supportedInstanceKeys = "kgmstzhbpno"
-
 local abbrev_instances = {
     -- x = "Reserved",
 
@@ -26,6 +24,7 @@ local abbrev_instances = {
     -- Vanilla
     n = "Naxxramas",
     o = "Onyxia's Lair",
+    j = "Ahn'Qiraj",
 }
 
 function LetsRaid:GetInstanceNameForKey(inst_key)

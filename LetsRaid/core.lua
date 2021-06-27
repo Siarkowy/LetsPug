@@ -55,6 +55,7 @@ local defaults = {
             -- Vanilla
             n = {},
             o = {},
+            j = {},
         },
         classes = {
             -- [char_name] = class_id
