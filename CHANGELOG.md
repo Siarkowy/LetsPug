@@ -1,5 +1,9 @@
 # Let's Raid Changelog
 
+## v0.5.3 (2021-06-27)
+
+- New: Added support for Temple of Ahn'Qiraj.
+
 ## v0.5.2 (2020-10-20)
 
 - Fixed: Raid lockouts will now be properly recognized in non-English clients.

@@ -2,7 +2,7 @@
 ## Title: LetsRaid
 ## Notes: Never miss a raid. Usage: /lr
 ## Author: Siarkowy
-## Version: 0.5.2
+## Version: 0.5.3
 ## X-Website: https://github.com/SiarkowyMods/LetsRaid
 ## X-License: BSD 3-Clause "New"
 ## OptionalDeps: Ace2, Ace3
